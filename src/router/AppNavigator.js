@@ -2,6 +2,7 @@ import { createStackNavigator, createDrawerNavigator, createAppContainer } from 
 import StackViewStyleInterpolator from "react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator";
 
 import WelcomePage from '../components/common/welcome';
+import HomePage from '../components/project/home';
 
 
 const AppNavigator = createStackNavigator(
@@ -9,6 +10,9 @@ const AppNavigator = createStackNavigator(
         Welcome: {
             screen: WelcomePage
         },
+        Home: {
+            screen: HomePage
+        }
     },
     {
         initialRouteName: 'Welcome',

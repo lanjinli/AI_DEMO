@@ -21,7 +21,7 @@ export default class Welcome extends Component {
 
     //跳转首页
     getHomePage() {
-        this.props.navigation.replace('HomeDrawerNav');
+        this.props.navigation.replace('Home');
     }
     static navigationOptions = {
         // 隐藏头部

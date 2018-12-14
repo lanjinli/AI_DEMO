@@ -4,7 +4,7 @@ import {
     PixelRatio,
     NativeModules
 } from 'react-native';
-// import Toast from 'react-native-root-toast';
+import Toast from 'react-native-root-toast';
 
 export const Demensions = require('Dimensions');
 export const ScreenWidth = Demensions.get('screen').width;
@@ -39,28 +39,28 @@ export const NAVBSR_HEIGHT = Platform.select({
     android: 50,
 });
 
-// let toast;
-// export const toastUtil = (content, time = 'SHORT') => {
-//     if (toast !== undefined) {
-//       Toast.hide(toast);
-//     }
-//     toast = Toast.show(content.toString(), {
-//         duration: Toast.durations[time],
-//         position: Toast.positions.BOTTOM,
-//         animation: true,
-//         shadow: false,
-//         backgroundColor: 'rgba(0,0,0,.8)',
-//         hideOnPress: true,
-//         delay: 0,
-//         opacity: 1,
-//         containerStyle: {
-//             paddingHorizontal: 10,
-//             paddingVertical: 6,
-//             borderRadius: 3,
-//         },
-//         textStyle: {
-//             fontSize: 14,
-//             lineHeight: 18,
-//         },
-//     });
-// };
+let toast;
+export const toastUtil = (content, time = 'SHORT') => {
+    if (toast !== undefined) {
+      Toast.hide(toast);
+    }
+    toast = Toast.show(content.toString(), {
+        duration: Toast.durations[time],
+        position: Toast.positions.BOTTOM,
+        animation: true,
+        shadow: false,
+        backgroundColor: 'rgba(0,0,0,.8)',
+        hideOnPress: true,
+        delay: 0,
+        opacity: 1,
+        containerStyle: {
+            paddingHorizontal: 10,
+            paddingVertical: 6,
+            borderRadius: 3,
+        },
+        textStyle: {
+            fontSize: 14,
+            lineHeight: 18,
+        },
+    });
+};
