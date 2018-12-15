@@ -1,5 +1,4 @@
 import * as Animatable from 'react-native-animatable';
-import ImagePicker from 'react-native-image-picker';
 import { RNCamera, FaceDetector } from 'react-native-camera';
 
 import React, {Component} from 'react';
@@ -33,222 +32,8 @@ export default class OcrIdcardocr extends Component {
     constructor() {
         super();
         this.state = {
-            base64: null,
-            avatarSource: null,
-            videoSource: null,
-            viewport_img: {
-                width: 0,
-                height: 0,
-            },
-            resultData: null,
-            readImg: false,
-            requestStatus: false,
-            visible: false,
-            isFlashOn:false,        //闪光灯
-            isRecording:false,      //是否在录像
         };
     }
-
-    toggleFlash(){
-        this.setState({isFlashOn:!this.state.isFlashOn})
-    }
-
-    isFlashOn(){
-        if (this.state.isFlashOn===false){
-            return(
-                <TouchableOpacity  onPress={()=>{this.toggleFlash()}}>
-                    <Text style={{fontSize:30,fontFamily:'iconfont',color:'black'}}>&#xe633;</Text>
-                </TouchableOpacity>
-
-            )
-        } else {
-            return(
-                <TouchableOpacity  onPress={()=>{this.toggleFlash()}}>
-                    <Text style={{fontSize:30,color:'white',fontFamily:'iconfont'}}>&#xe633;</Text>
-                </TouchableOpacity>
-
-            )
-        }
-
-    }
-    recordBtn(camera){
-        if (this.state.isRecording===false){
-            return(
-                <TouchableOpacity onPress={() => this.takeRecord(camera)} style={styles.capture}>
-                    <Text style={{ fontSize: 14 }}> 摄像 </Text>
-                </TouchableOpacity>
-            )
-        } else {
-            return (
-                <TouchableOpacity onPress={() => this.stopRecord(camera)} style={styles.capture}>
-                    <Text style={{ fontSize: 14 }}> 停止 </Text>
-                </TouchableOpacity>
-            )
-        }
-    }
-    //开始录像
-     takeRecord= async function(camera){
-        this.setState({isRecording:true});
-        const options = { quality:RNCamera.Constants.VideoQuality["480p"],maxFileSize:(100*1024*1024) };
-        const data = await camera.recordAsync(options);
-        console.log(data);
-        this.props.navigation.navigate('parentPage',{videoUrl:data.uri})
-    };
-    //停止录像
-    stopRecord(camera){
-        this.setState({isRecording:false});
-        camera.stopRecording()
-    }
-
-    // 选择图片
-    selectPhotoTapped(type) {
-
-        if(this.state.readImg){return}
-
-        this.setState({
-            readImg: true,
-        });
-
-        const options = {
-            title: '', 
-            cancelButtonTitle: '取消',
-            takePhotoButtonTitle: '拍照', 
-            chooseFromLibraryButtonTitle: '选择照片', 
-            cameraType: 'back',
-            mediaType: 'photo',
-            videoQuality: 'high', 
-            durationLimit: 10, 
-            // maxWidth: 300,
-            // maxHeight: 300,
-            quality: 0.8,
-            angle: 0,
-            allowsEditing: false, 
-            noData: false,
-            storageOptions: {
-                skipBackup: true
-            }
-        };
-
-        // showImagePicker 相册与拍照
-        // launchImageLibrary 相册
-        // launchCamera 拍照
-        ImagePicker[type](options, (response) => {
-            this.setState({
-                readImg: false,
-            });
-            if (response.didCancel) {
-                // this.refs.toast.show('取消图像选择');
-            } else if (response.error) {
-                this.refs.toast.show('选择图像出错', response.error);
-            } else {
-                // let source = { uri: response.uri };
-                // You can also display the image using data:
-                // this.requestApi(response.data);
-                let source = { uri: 'data:image/jpeg;base64,' + response.data };
-                let imgWidth,imgHeight;
-                if(response.width > response.height){
-                    imgWidth = ScreenWidth;
-                    imgHeight = response.height/(response.width/ScreenWidth);
-                }else if(response.width < response.height){
-                    imgWidth = response.width/(response.height/ScreenWidth);
-                    imgHeight = ScreenWidth;
-                }else{
-                    imgWidth = ScreenWidth;
-                    imgHeight = ScreenWidth;
-                }
-                this.setState({
-                    base64: response.data,
-                    avatarSource: source,
-                    viewport_img: {
-                        width: imgWidth,
-                        height: imgHeight,
-                    }
-                });
-            }
-        });
-    }
-
-    // 请求接口
-    requestApi() {
-        this._isMounted = true;
-
-        if(this.state.requestStatus)return
-
-        if(!this.state.base64){
-            toastUtil('请先选择图像');
-            return
-        }
-
-        this.setState({
-            requestStatus: true
-        });
-
-        let data = {
-            "app_id": "2109841751",
-            "time_stamp": Math.round(new Date().getTime()/1000).toString(),
-            "nonce_str": Math.floor(Math.random()*100000).toString(),
-            "sign": "",
-            "image": this.state.base64,
-            "image_url": "",
-        }
-        HttpService.post('http://web.lilanjin.top/sign.php',{
-            'url': OcrApi.ocr_generalocr,
-            'params': data
-        })
-        .then(result=>{
-            if(this.state.requestStatus){
-                if(!this._isMounted)return;
-                if(typeof result == "object"){
-                    this.setState({
-                        resultData: result,
-                        requestStatus: false
-                    });
-                }else{
-                    toastUtil('识别失败，未知错误');
-                }
-                
-            }
-        })
-        .catch(error=>{
-            if(!this._isMounted)return;
-            this.setState({
-                resultData: false,
-                requestStatus: false
-            });
-            toastUtil('识别失败，未知错误');
-        })
-    }
-
-    // 绑定返回
-    componentWillMount() {
-        this._isMounted = true;
-        if (Platform.OS === 'android') {
-            this._didFocusSubscription = this.props.navigation.addListener('didFocus', payload =>
-                BackHandler.addEventListener('hardwareBackPress', this.cancelRequest)
-            );
-        }
-    }
-    
-    // 取消返回
-    componentDidMount() {
-        this._isMounted = false;
-        if (Platform.OS === 'android') {
-            this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
-                BackHandler.removeEventListener('hardwareBackPress', this.cancelRequest)
-            );
-        }
-    }
-
-    // 取消请求
-    cancelRequest = () => {
-        if(this.state.requestStatus){
-            this.setState({
-                requestStatus: false
-            });
-            return true;
-        }
-        return false;
-    };
 
     render() {
         const { data } = this.props.navigation.state.params;
@@ -268,15 +53,9 @@ export default class OcrIdcardocr extends Component {
                 />
                 <ScrollView>
                     <View style={styles.viewport}>
-                        <Image style={this.state.viewport_img} source={this.state.avatarSource} onLoad={()=>{this.setState({readImg: false})}}/>
-                        {this.state.readImg && <ActivityIndicator
-                            style={styles.imgLoad}
-                            color='#abacac'
-                            animating={this.state.readImg}
-                            size="small"
-                        />}
-                        <View style={styles.choice_wrap}>
-                            <Animatable.View style={{marginTop: 10, height: 38, width: 38}} animation="fadeInRight" duration={500} delay={400} easing="ease-out" iterationCount={1}>
+                        <View style={styles.viewport_item}>
+                            <Image style={{ width: 300, height: 190 }} source={require("../../../assets/image/front_effect.png")} />
+                            <View style={styles.choice_wrap}>
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
@@ -284,82 +63,31 @@ export default class OcrIdcardocr extends Component {
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
-                            </Animatable.View>
-                            <Animatable.View style={{marginTop: 10, height: 38, width: 38}} animation="fadeInRight" duration={500} delay={320} easing="ease-out" iterationCount={1}>
+                            </View>
+                        </View>
+                        <View style={styles.viewport_item}>
+                            <Image style={{ width: 300, height: 190 }} source={require("../../../assets/image/back_effect.png")} />
+                            <View style={styles.choice_wrap}>
                                 <TouchableOpacity
-                                    style={styles.choice_btn}
+                                    style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.selectPhotoTapped('launchImageLibrary')}}
+                                    onPress={() => {this.selectPhotoTapped('launchCamera')}}
                                 >
-                                    <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_photo.png")} />
+                                        <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
-                            </Animatable.View>
+                            </View>
                         </View>
                     </View>
                     <View style={styles.button}>
                         <TouchableOpacity
                             style={styles.btn_wrap}
                             activeOpacity={0.9}
-                            onPress={this.requestApi.bind(this)}
+                            onPress={()=>{}}
                         >
                             <Text style={styles.btn_text}>识别 {data.title}</Text>
                         </TouchableOpacity>
                     </View>
-                    {
-                        this.state.resultData && this.state.resultData.ret == 0 ? (
-                            <View style={styles.results}>
-                                <View style={styles.TextView}>
-                                {
-                                    this.state.resultData.data.item_list.map((item, index) => {
-                                        return (<Text style={styles.results_text} key={index}>{index+1}：{item.itemstring}</Text>);
-                                    })
-                                }
-                                </View>
-                                <View style={styles.PreView}>
-                                    <Text style={styles.results_pre}>{this.state.resultData && formatJson(this.state.resultData)}</Text>
-                                </View>
-                            </View>
-                        ):(
-                            <View style={styles.results}>
-                                <Text style={styles.results_err_text}>
-                                    {this.state.resultData && this.state.resultData.msg}
-                                    &nbsp;&nbsp;
-                                    {this.state.resultData && 'code:'+this.state.resultData.ret}
-                                </Text>
-                            </View>
-                        )
-                    }
-                    <RNCamera
-                        style={styles.preview}
-                        type={RNCamera.Constants.Type.back}
-                        flashMode={this.state.isFlashOn===true ? RNCamera.Constants.FlashMode.on : RNCamera.Constants.FlashMode.off}
-                        permissionDialogTitle={'Permission to use camera'}
-                        permissionDialogMessage={'We need your permission to use your camera phone'}
-                    >
-                        {({ camera, status }) => {
-                            console.log(status);
-                            return (
-                                <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
-                                    <View style={{position:'absolute',top:30,left:-40}}>{this.isFlashOn()}</View>
-                                    {this.recordBtn(camera)}
-                                </View>
-                            );
-                        }}
-                    </RNCamera>
                 </ScrollView>
-                {
-                    this.state.requestStatus && <Animatable.View style={styles.requestStatusView} animation="fadeInUp" easing="ease-out" iterationCount={1} duration={300}>
-                        <View style={styles.requestStatusContentView}>
-                            <ActivityIndicator
-                                style={styles.requestLoad}
-                                color='#fff'
-                                animating={true}
-                                size="small"
-                            />
-                            <Text style={styles.requestText}>正在识别</Text>
-                        </View>
-                    </Animatable.View>
-                }
             </View>
         );
     }
@@ -377,48 +105,45 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    requestStatusDialog: {
-        opacity: 0.5,
-        backgroundColor: '#000',
-    },
-    requestStatusView: {
-        position: 'absolute',
-        width: ScreenWidth,
-        height: ScreenHeight - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT),
-        top: STATUS_BAR_HEIGHT + NAVBSR_HEIGHT,
-        left: 0,
-    },
-    requestStatusContentView: {
-        position: 'absolute',
-        left: ScreenWidth/2 - 50,
-        top: (ScreenHeight - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT))/2 - 100,
-        paddingLeft: 18,
-        paddingRight: 18,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,.65)',
-        borderRadius: 4,
-        width: 100,
-        height: 100,
-    },
-    requestLoad: {
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-    },
-    requestText: {
-        color: '#fff',
-        fontSize: 15,
-        textAlign: 'center',
-        marginBottom: 5,
-    },
     viewport: {
-        width: ScreenWidth,
-        height: ScreenWidth,
-        backgroundColor: '#f5f6f6',
+        backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'relative'
+        position: 'relative',
+        paddingTop: 20,
     },
+    viewport_item: {
+        width: 300,
+        height: 190,
+        borderRadius: 8,
+        backgroundColor: '#f5f6f6',
+        marginBottom: 20,
+        overflow: 'hidden',
+        position: 'relative',
+    },
+    choice_wrap: {
+        width: 60,
+        height: 30,
+        position: 'absolute',
+        bottom: 10,
+        left: 300/2 - 30,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    choice_btn: {
+        borderRadius: 15,
+        overflow: 'hidden',
+        height: 30,
+        width: 60,
+        backgroundColor: 'rgba(0,0,0,.3)',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    
     imgLoad: {
         position: 'absolute',
         top: ScreenWidth/2 - 10,
@@ -426,27 +151,6 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         zIndex: 1,
-    },
-    choice_wrap: {
-        width: 38,
-        position: 'absolute',
-        bottom: 10,
-        right: 10,
-        width: 38,
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    choice_btn: {
-        height: 38,
-        width: 38,
-        backgroundColor: 'rgba(0,0,0,.3)',
-        borderRadius: 24,
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     results: {
         paddingHorizontal: 10,
@@ -479,7 +183,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginHorizontal: 10,
-        marginTop: 30,
+        marginTop: 10,
         marginBottom: 20,
     },
     btn_wrap: {
@@ -493,19 +197,5 @@ const styles = StyleSheet.create({
     btn_text: {
         fontSize: 18,
         color: '#fff'
-    },
-    preview: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    capture: {
-        flex: 0,
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        padding: 15,
-        paddingHorizontal: 20,
-        alignSelf: 'center',
-        margin: 20,
-    },
+    }
 });
