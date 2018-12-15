@@ -4,7 +4,7 @@ import StackViewStyleInterpolator from "react-navigation-stack/dist/views/StackV
 import HomeDrawerNavigator from './HomeDrawerNavigator';
 import WelcomePage from '../components/common/welcome';
 import InfoPage from '../components/project/info';
-
+import ListPage from '../components/project/list';
 
 const AppNavigator = createStackNavigator(
     {
@@ -19,6 +19,12 @@ const AppNavigator = createStackNavigator(
         },
         Info: {
             screen: InfoPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        List: {
+            screen: ListPage,
             navigationOptions: {
                 header: () => null
             }
