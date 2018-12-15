@@ -26,18 +26,33 @@ import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
 import {OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
+import TakePicture from '../../common/TakePicture ';
 
 export default class OcrIdcardocr extends Component {
 
     constructor() {
         super();
         this.state = {
+            CameraView: false
         };
     }
+
+    controlCamera(){
+        this.setState({CameraView: !this.state.CameraView})
+    }
+
+    takePicture = async function() {
+        if (this.camera) {
+            const options = { quality: 0.5, base64: true };
+            const data = await this.camera.takePictureAsync(options)
+            console.log(data.uri);
+        }
+    };
 
     render() {
         const { data } = this.props.navigation.state.params;
         const { navigate } = this.props.navigation;
+        
         return (
             <View style={styles.flex}>
                 <NavigationBar
@@ -59,7 +74,7 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.selectPhotoTapped('launchCamera')}}
+                                    onPress={() => {this.controlCamera()}}
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
@@ -71,7 +86,7 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.selectPhotoTapped('launchCamera')}}
+                                    onPress={() => {this.controlCamera()}}
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
@@ -82,11 +97,14 @@ export default class OcrIdcardocr extends Component {
                         <TouchableOpacity
                             style={styles.btn_wrap}
                             activeOpacity={0.9}
-                            onPress={()=>{}}
+                            onPress={()=>{this.setState({CameraView: !this.state.CameraView})}}
                         >
                             <Text style={styles.btn_text}>识别 {data.title}</Text>
                         </TouchableOpacity>
                     </View>
+                    {
+                        this.state.CameraView && <TakePicture/>
+                    }
                 </ScrollView>
             </View>
         );
@@ -125,7 +143,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 30,
         position: 'absolute',
-        bottom: 10,
+        bottom: 190/2 - 15,
         left: 300/2 - 30,
         flex: 1,
         flexDirection: 'row',
@@ -143,7 +161,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    
+
     imgLoad: {
         position: 'absolute',
         top: ScreenWidth/2 - 10,
