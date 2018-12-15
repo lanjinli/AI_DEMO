@@ -80,36 +80,36 @@ export const HomeData = [
         summary: 'React Native\n常用第三方组件',
         page: 'List',
         children: [
-            {
-                img: require('../assets/image/icon_app.png'),
-                title: '模态窗',
-                summary: 'react-native-modalbox',
-                page: 'RnModalbox'
-            },
-            {
-                img: require('../assets/image/icon_app.png'),
-                title: '选择图像',
-                summary: 'react-native-image-picker',
-                page: 'OcrHandwritingocr'
-            },
-            {
-                img: require('../assets/image/icon_app.png'),
-                title: '列表组件',
-                summary: '',
-                page: 'RnList'
-            },
-            {
-                img: require('../assets/image/icon_app.png'),
-                title: '轮播组件',
-                summary: 'react-native-snap-carousel',
-                page: 'RnSnapCarousel'
-            },
-            {
-                img: require('../assets/image/icon_app.png'),
-                title: '对话框',
-                summary: 'react-native-popup-dialog',
-                page: 'RnDialog'
-            }
+            // {
+            //     img: require('../assets/image/icon_app.png'),
+            //     title: '模态窗',
+            //     summary: 'react-native-modalbox',
+            //     page: 'RnModalbox'
+            // },
+            // {
+            //     img: require('../assets/image/icon_app.png'),
+            //     title: '选择图像',
+            //     summary: 'react-native-image-picker',
+            //     page: 'OcrHandwritingocr'
+            // },
+            // {
+            //     img: require('../assets/image/icon_app.png'),
+            //     title: '列表组件',
+            //     summary: '',
+            //     page: 'RnList'
+            // },
+            // {
+            //     img: require('../assets/image/icon_app.png'),
+            //     title: '轮播组件',
+            //     summary: 'react-native-snap-carousel',
+            //     page: 'RnSnapCarousel'
+            // },
+            // {
+            //     img: require('../assets/image/icon_app.png'),
+            //     title: '对话框',
+            //     summary: 'react-native-popup-dialog',
+            //     page: 'RnDialog'
+            // }
         ]
     }
 ];

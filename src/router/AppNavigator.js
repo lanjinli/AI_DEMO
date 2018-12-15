@@ -8,6 +8,7 @@ import ListPage from '../components/project/list';
 
 import OcrHandwritingocrPage from '../components/project/ocr/ocr_handwritingocr';
 import OcrGeneralocrPage from '../components/project/ocr/ocr_generalocr';
+import OcrIdcardocrPage from '../components/project/ocr/ocr_idcardocr';
 
 const AppNavigator = createStackNavigator(
     {
@@ -40,6 +41,12 @@ const AppNavigator = createStackNavigator(
         },
         OcrGeneralocr: {
             screen: OcrGeneralocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrIdcardocr: {
+            screen: OcrIdcardocrPage,
             navigationOptions: {
                 header: () => null
             }
