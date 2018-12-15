@@ -1,8 +1,9 @@
-import { createStackNavigator, createDrawerNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import StackViewStyleInterpolator from "react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator";
 
+import HomeDrawerNavigator from './HomeDrawerNavigator';
 import WelcomePage from '../components/common/welcome';
-import HomePage from '../components/project/home';
+import InfoPage from '../components/project/info';
 
 
 const AppNavigator = createStackNavigator(
@@ -11,7 +12,16 @@ const AppNavigator = createStackNavigator(
             screen: WelcomePage
         },
         Home: {
-            screen: HomePage
+            screen: HomeDrawerNavigator,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        Info: {
+            screen: InfoPage,
+            navigationOptions: {
+                header: () => null
+            }
         }
     },
     {

@@ -1,3 +1,5 @@
+import LinearGradient from 'react-native-linear-gradient';
+
 import React, {Component} from 'react';
 import {
     Platform,
@@ -17,14 +19,10 @@ import {
     NAVBSR_HEIGHT,
     toastUtil
 } from '../../constants/util';
-import NavigationBar from '../../navigation/NavigationBar';
+import NavigationBar from '../navigation/NavigationBar';
 import {HomeData} from '../../store/config';
 
 export default class HomePage extends Component {
-
-    static navigationOptions = {
-        header: () => null
-    };
 
     constructor(props) {
         super(props);
@@ -53,6 +51,11 @@ export default class HomePage extends Component {
         return true;
     };
 
+    componentWillUnmount() {
+        this._didFocusSubscription && this._didFocusSubscription.remove();
+        this._willBlurSubscription && this._willBlurSubscription.remove();
+    }
+
     getPage(name, item) {
         this.props.navigation.navigate(name, item);
     }
@@ -68,12 +71,12 @@ export default class HomePage extends Component {
                     }}
                     leftButton={
                         <TouchableOpacity style={[styles.NavBarBtn]} activeOpacity={0.6} onPress={() => this.props.navigation.openDrawer()} >
-                            <Image style={{ width: 44, height: 44 }} source={require("../assets/images/icon_menu.png")} />
+                            <Image style={{ width: 44, height: 44 }} source={require("../../assets/image/icon_menu.png")} />
                         </TouchableOpacity>
                     }
                     rightButton={
                         <TouchableOpacity style={[styles.NavBarBtn]} activeOpacity={0.6} onPress={() => navigate('Info')} >
-                            <Image style={{ width: 44, height: 44 }} source={require("../assets/images/icon_about.png")} />
+                            <Image style={{ width: 44, height: 44 }} source={require("../../assets/image/icon_about.png")} />
                         </TouchableOpacity>
                     }
                 />
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
     },
     b_list: {
         flex: 1,
-        minHeight: height - (44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
+        minHeight: ScreenHeight - (44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
     },
     b_l_btn: {
         marginHorizontal: 10,
