@@ -6,6 +6,9 @@ import WelcomePage from '../components/common/welcome';
 import InfoPage from '../components/project/info';
 import ListPage from '../components/project/list';
 
+import OcrHandwritingocrPage from '../components/project/ocr/ocr_handwritingocr';
+import OcrGeneralocrPage from '../components/project/ocr/ocr_generalocr';
+
 const AppNavigator = createStackNavigator(
     {
         Welcome: {
@@ -25,6 +28,18 @@ const AppNavigator = createStackNavigator(
         },
         List: {
             screen: ListPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrHandwritingocr: {
+            screen: OcrHandwritingocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrGeneralocr: {
+            screen: OcrGeneralocrPage,
             navigationOptions: {
                 header: () => null
             }

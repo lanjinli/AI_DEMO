@@ -138,7 +138,7 @@ export default class OcrHandwritingocr extends Component {
             "image_url": "",
         }
         HttpService.post('http://web.lilanjin.top/sign.php',{
-            'url': OcrApi.ocr_handwritingocr,
+            'url': OcrApi.ocr_generalocr,
             'params': data
         })
         .then(result=>{
