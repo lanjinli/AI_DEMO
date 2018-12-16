@@ -17,7 +17,7 @@ const { StatusBarManager } = NativeModules;
 
 export function isIphoneX() {
     return (
-        Platform.OS === 'ios' && ((height === X_HEIGHT && width === X_WIDTH) || (height === X_WIDTH && width === X_HEIGHT))
+        Platform.OS === 'ios' && ((ScreenHeight === X_HEIGHT && ScreenWidth === X_WIDTH) || (ScreenHeight === X_WIDTH && ScreenWidth === X_HEIGHT))
     )
 }
 
