@@ -1,5 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 import { RNCamera, FaceDetector } from 'react-native-camera';
+import Modal from 'react-native-modalbox';
 
 import React, {Component} from 'react';
 import {
@@ -16,8 +17,7 @@ import {
 } from 'react-native';
 import {
     Demensions,
-    ScreenWidth,
-    ScreenHeight,
+    screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
 
     imgLoad: {
         position: 'absolute',
-        top: ScreenWidth/2 - 10,
-        left: ScreenWidth/2 - 10,
+        top: screen.width/2 - 10,
+        left: screen.width/2 - 10,
         width: 20,
         height: 20,
         zIndex: 1,

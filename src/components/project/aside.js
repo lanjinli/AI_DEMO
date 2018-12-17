@@ -12,8 +12,7 @@ import {
 } from 'react-native';
 import {
     Demensions,
-    ScreenWidth,
-    ScreenHeight,
+    screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil

@@ -9,8 +9,7 @@ import {
 } from 'react-native';
 import {
     Demensions,
-    ScreenWidth,
-    ScreenHeight,
+    screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
         height: STATUS_BAR_HEIGHT,
     },
     navBar: {
-        width: ScreenWidth,
+        width: screen.width,
         height: NAVBSR_HEIGHT,
         flexDirection: 'row',
         justifyContent: 'space-between',

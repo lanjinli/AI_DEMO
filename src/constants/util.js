@@ -7,9 +7,8 @@ import {
 import Toast from 'react-native-root-toast';
 
 export const Demensions = require('Dimensions');
-export const ScreenWidth = Demensions.get('screen').width;
-export const ScreenHeight = Demensions.get('screen').height;
-export const Scale = Demensions.get('screen').scale;
+export const screen  = Demensions.get('screen');
+export const windowScreen = Demensions.get('window');
 
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
@@ -17,7 +16,7 @@ const { StatusBarManager } = NativeModules;
 
 export function isIphoneX() {
     return (
-        Platform.OS === 'ios' && ((ScreenHeight === X_HEIGHT && ScreenWidth === X_WIDTH) || (ScreenHeight === X_WIDTH && ScreenWidth === X_HEIGHT))
+        Platform.OS === 'ios' && ((screen.height === X_HEIGHT && screen.width === X_WIDTH) || (screen.height === X_WIDTH && screen.width === X_HEIGHT))
     )
 }
 

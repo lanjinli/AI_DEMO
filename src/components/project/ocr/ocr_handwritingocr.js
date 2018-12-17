@@ -16,8 +16,7 @@ import {
 } from 'react-native';
 import {
     Demensions,
-    ScreenWidth,
-    ScreenHeight,
+    screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil
@@ -93,14 +92,14 @@ export default class OcrHandwritingocr extends Component {
                 let source = { uri: 'data:image/jpeg;base64,' + response.data };
                 let imgWidth,imgHeight;
                 if(response.width > response.height){
-                    imgWidth = ScreenWidth;
-                    imgHeight = response.height/(response.width/ScreenWidth);
+                    imgWidth = screen.width;
+                    imgHeight = response.height/(response.width/screen.width);
                 }else if(response.width < response.height){
-                    imgWidth = response.width/(response.height/ScreenWidth);
-                    imgHeight = ScreenWidth;
+                    imgWidth = response.width/(response.height/screen.width);
+                    imgHeight = screen.width;
                 }else{
-                    imgWidth = ScreenWidth;
-                    imgHeight = ScreenWidth;
+                    imgWidth = screen.width;
+                    imgHeight = screen.width;
                 }
                 this.setState({
                     base64: response.data,
@@ -312,15 +311,15 @@ const styles = StyleSheet.create({
     },
     requestStatusView: {
         position: 'absolute',
-        width: ScreenWidth,
-        height: ScreenHeight - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT),
+        width: screen.width,
+        height: screen.height - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT),
         top: STATUS_BAR_HEIGHT + NAVBSR_HEIGHT,
         left: 0,
     },
     requestStatusContentView: {
         position: 'absolute',
-        left: ScreenWidth/2 - 50,
-        top: (ScreenHeight - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT))/2 - 100,
+        left: screen.width/2 - 50,
+        top: (screen.height - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT))/2 - 100,
         paddingLeft: 18,
         paddingRight: 18,
         justifyContent: 'center',
@@ -341,8 +340,8 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     viewport: {
-        width: ScreenWidth,
-        height: ScreenWidth,
+        width: screen.width,
+        height: screen.width,
         backgroundColor: '#f5f6f6',
         justifyContent: 'center',
         alignItems: 'center',
@@ -350,8 +349,8 @@ const styles = StyleSheet.create({
     },
     imgLoad: {
         position: 'absolute',
-        top: ScreenWidth/2 - 10,
-        left: ScreenWidth/2 - 10,
+        top: screen.width/2 - 10,
+        left: screen.width/2 - 10,
         width: 20,
         height: 20,
         zIndex: 1,

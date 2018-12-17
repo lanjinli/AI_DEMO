@@ -11,8 +11,7 @@ import {
 } from 'react-native';
 import {
     Demensions,
-    ScreenWidth,
-    ScreenHeight,
+    screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT
 } from '../../constants/util';
@@ -90,13 +89,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'flex-end',
-        width: ScreenWidth,
+        width: screen.width,
         height: null,
         resizeMode: 'cover'
     },
     slogan: {
-        width: ScreenWidth,
-        height: ScreenHeight/5,
+        width: screen.width,
+        height: screen.height/5,
         backgroundColor: '#FFF',
         position: 'absolute',
         bottom: 0,

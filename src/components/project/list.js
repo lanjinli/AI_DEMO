@@ -13,8 +13,7 @@ import {
 } from 'react-native';
 import {
     Demensions,
-    ScreenWidth,
-    ScreenHeight,
+    screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil
@@ -110,7 +109,7 @@ const styles = StyleSheet.create({
     },
     banner: {
         height: 150,
-        width: ScreenWidth,
+        width: screen.width,
     },
     banner_bg: {
         height: 150,
@@ -143,7 +142,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     b_l_btn: {
-        width: (ScreenWidth - 30) / 2,
+        width: (screen.width - 30) / 2,
         height: 94,
         marginHorizontal: 5,
         marginVertical: 5,
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: ScreenHeight - (160 + 44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
+        minHeight: screen.height - (160 + 44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
     },
     null_img: {
         width: 160,

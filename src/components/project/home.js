@@ -13,8 +13,7 @@ import {
 } from 'react-native';
 import {
     Demensions,
-    ScreenWidth,
-    ScreenHeight,
+    screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
     },
     b_list: {
         flex: 1,
-        minHeight: ScreenHeight - (44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
+        minHeight: screen.height - (44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
     },
     b_l_btn: {
         marginHorizontal: 10,
