@@ -9,6 +9,7 @@ import ListPage from '../components/project/list';
 import OcrHandwritingocrPage from '../components/project/ocr/ocr_handwritingocr';
 import OcrGeneralocrPage from '../components/project/ocr/ocr_generalocr';
 import OcrIdcardocrPage from '../components/project/ocr/ocr_idcardocr';
+import TakePicturePage from '../components/common/TakePicture';
 
 const AppNavigator = createStackNavigator(
     {
@@ -29,6 +30,12 @@ const AppNavigator = createStackNavigator(
         },
         List: {
             screen: ListPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        TakePicture: {
+            screen: TakePicturePage,
             navigationOptions: {
                 header: () => null
             }

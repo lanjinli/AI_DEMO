@@ -1,6 +1,5 @@
 import * as Animatable from 'react-native-animatable';
 import { RNCamera, FaceDetector } from 'react-native-camera';
-import Modal from 'react-native-modalbox';
 
 import React, {Component} from 'react';
 import {
@@ -27,7 +26,6 @@ import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
 import {OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
-import TakePicture from '../../common/TakePicture ';
 
 export default class OcrIdcardocr extends Component {
 
@@ -39,20 +37,9 @@ export default class OcrIdcardocr extends Component {
         };
     }
 
-    controlCameraModal(){
-        this.setState({ModalView: !this.state.ModalView})
+    getTakePicture(name, item) {
+        this.props.navigation.navigate(name, item);
     }
-    controlCamera(){
-        this.setState({CameraView: !this.state.CameraView})
-    }
-
-    takePicture = async function() {
-        if (this.camera) {
-            const options = { quality: 0.5, base64: true };
-            const data = await this.camera.takePictureAsync(options)
-            console.log(data.uri);
-        }
-    };
 
     render() {
         const { data } = this.props.navigation.state.params;
@@ -64,9 +51,6 @@ export default class OcrIdcardocr extends Component {
                     title={data.title}
                     style={{
                         backgroundColor: '#fff',
-                    }}
-                    statusBar={{
-                        hidden: this.state.ModalView
                     }}
                     leftButton={
                         <TouchableOpacity style={[styles.NavBarBtn]} activeOpacity={0.6} onPress={() => this.props.navigation.goBack()} >
@@ -82,7 +66,7 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.controlCameraModal()}}
+                                    onPress={() => {this.getTakePicture('TakePicture', {data: {type: 'idcard'}})}}
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
@@ -94,7 +78,7 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.controlCameraModal()}}
+                                    onPress={() => {this.getTakePicture('TakePicture', {data: {type: 'idcard'}})}}
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
@@ -105,41 +89,15 @@ export default class OcrIdcardocr extends Component {
                         <TouchableOpacity
                             style={styles.btn_wrap}
                             activeOpacity={0.9}
-                            onPress={() => {this.controlCameraModal()}}
+                            onPress={() => {alert('开始识别')}}
                         >
                             <Text style={styles.btn_text}>识别 {data.title}</Text>
                         </TouchableOpacity>
                     </View>
-                    {/* {
-                        this.state.CameraView && <TakePicture/>
-                    } */}
                 </ScrollView>
-                <Modal
-                    style={[styles.modal]}
-                    isOpen={this.state.ModalView}
-                    backdropPressToClose={false}
-                    swipeToClose={false}
-                    backdrop={false}
-                    backButtonClose={true}
-                    animationDuration={0}
-                    startOpen={true}
-                    coverScreen={true}
-                    position={'top'}
-                    entry={'top'}
-                    // startOpen={true}
-                    onClosed={() => {
-                        this.controlCamera();
-                        this.setState({ModalView: false});
-                    }}
-                    onOpened={() => {
-                        this.controlCamera();
-                        this.setState({ModalView: true});
-                    }}
-                >
-                    {
-                        this.state.CameraView && <TakePicture style={{width: screen.width,height: screen.height,backgroundColor:'#ccc'}}/>
-                    }
-                </Modal>
+                {
+                    this.state.CameraView && <TakePicture/>
+                }
             </View>
         );
     }
@@ -194,18 +152,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    modal: {
-        width: screen.width,
-        height: screen.height,
-        backgroundColor: '#000',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-    },
-    text: {
-        color: "black",
-        fontSize: 22
     },
     imgLoad: {
         position: 'absolute',
