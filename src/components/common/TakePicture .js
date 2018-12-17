@@ -16,6 +16,7 @@ import {
 import {
     Demensions,
     screen,
+    windowScreen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil
@@ -42,25 +43,28 @@ export default class TakePicture extends Component {
             <View style={styles.container}>
                 <RNCamera
                     ref={ref => {
-                    this.camera = ref;
+                        this.camera = ref;
                     }}
                     style = {styles.preview}
-                    type={RNCamera.Constants.Type.back}
-                    flashMode={RNCamera.Constants.FlashMode.on}
-                    permissionDialogTitle={'Permission to use camera'}
-                    permissionDialogMessage={'We need your permission to use your camera phone'}
+                    autoFocus = {RNCamera.Constants.AutoFocus.on} // 自动对焦
+                    type={RNCamera.Constants.Type.back} // 指定摄像头
+                    flashMode={RNCamera.Constants.FlashMode.off} // 闪光灯
+                    zoom={0} // 缩放比例
+                    permissionDialogTitle={'使用相机许可'}
+                    permissionDialogMessage={'我们需要你的许可才能使用你的照相手机'}
+                    onCameraReady={()=>{alert('相机准备就绪')}}
+                    onMountError={()=>{alert('相机打开失败')}}
+                    onPictureTaken={()=>{alert('拍照')}}
                     onGoogleVisionBarcodesDetected={({ barcodes }) => {
-                    console.log(barcodes)
+                        console.log(barcodes)
                     }}
                 />
-                <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center',}}>
-                    <TouchableOpacity
-                        onPress={this.takePicture.bind(this)}
-                        style = {styles.capture}
-                    >
-                        <Text style={{fontSize: 14}}> SNAP </Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                    onPress={this.takePicture.bind(this)}
+                    style = {styles.capture}
+                >
+                    <Text style={{fontSize: 14}}> SNAP </Text>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -68,15 +72,17 @@ export default class TakePicture extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        width: screen.width,
+        height: screen.height,
         backgroundColor: '#000',
-        flexDirection: 'column',
-        backgroundColor: 'black'
+        position: 'relative'
     },
     preview: {
+        width: screen.width,
+        height: screen.height,
         flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center'
+        width: 300,
+        height: 160,
     },
     capture: {
         flex: 0,
@@ -85,6 +91,11 @@ const styles = StyleSheet.create({
         padding: 15,
         paddingHorizontal: 20,
         alignSelf: 'center',
-        margin: 20
+        margin: 20,
+        width: 100,
+        height: 40,
+        position: 'absolute',
+        top: 10,
+        left: 10,
     },
 });

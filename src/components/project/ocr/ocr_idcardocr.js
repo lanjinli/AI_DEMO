@@ -18,6 +18,7 @@ import {
 import {
     Demensions,
     screen,
+    windowScreen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil
@@ -33,10 +34,14 @@ export default class OcrIdcardocr extends Component {
     constructor() {
         super();
         this.state = {
-            CameraView: false
+            ModalView: false,
+            CameraView: false,
         };
     }
 
+    controlCameraModal(){
+        this.setState({ModalView: !this.state.ModalView})
+    }
     controlCamera(){
         this.setState({CameraView: !this.state.CameraView})
     }
@@ -58,7 +63,10 @@ export default class OcrIdcardocr extends Component {
                 <NavigationBar
                     title={data.title}
                     style={{
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
+                    }}
+                    statusBar={{
+                        hidden: this.state.ModalView
                     }}
                     leftButton={
                         <TouchableOpacity style={[styles.NavBarBtn]} activeOpacity={0.6} onPress={() => this.props.navigation.goBack()} >
@@ -74,7 +82,7 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.controlCamera()}}
+                                    onPress={() => {this.controlCameraModal()}}
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
@@ -86,7 +94,7 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.controlCamera()}}
+                                    onPress={() => {this.controlCameraModal()}}
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
@@ -97,15 +105,41 @@ export default class OcrIdcardocr extends Component {
                         <TouchableOpacity
                             style={styles.btn_wrap}
                             activeOpacity={0.9}
-                            onPress={()=>{this.setState({CameraView: !this.state.CameraView})}}
+                            onPress={() => {this.controlCameraModal()}}
                         >
                             <Text style={styles.btn_text}>识别 {data.title}</Text>
                         </TouchableOpacity>
                     </View>
-                    {
+                    {/* {
                         this.state.CameraView && <TakePicture/>
-                    }
+                    } */}
                 </ScrollView>
+                <Modal
+                    style={[styles.modal]}
+                    isOpen={this.state.ModalView}
+                    backdropPressToClose={false}
+                    swipeToClose={false}
+                    backdrop={false}
+                    backButtonClose={true}
+                    animationDuration={0}
+                    startOpen={true}
+                    coverScreen={true}
+                    position={'top'}
+                    entry={'top'}
+                    // startOpen={true}
+                    onClosed={() => {
+                        this.controlCamera();
+                        this.setState({ModalView: false});
+                    }}
+                    onOpened={() => {
+                        this.controlCamera();
+                        this.setState({ModalView: true});
+                    }}
+                >
+                    {
+                        this.state.CameraView && <TakePicture style={{width: screen.width,height: screen.height,backgroundColor:'#ccc'}}/>
+                    }
+                </Modal>
             </View>
         );
     }
@@ -161,7 +195,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-
+    modal: {
+        width: screen.width,
+        height: screen.height,
+        backgroundColor: '#000',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+    },
+    text: {
+        color: "black",
+        fontSize: 22
+    },
     imgLoad: {
         position: 'absolute',
         top: screen.width/2 - 10,
