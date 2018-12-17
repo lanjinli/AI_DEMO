@@ -73,24 +73,47 @@ export default class TakePicture extends Component {
                         zoom={0} // 缩放比例
                         permissionDialogTitle={'使用相机许可'}
                         permissionDialogMessage={'我们需要你的许可才能使用你的照相手机'}
-                        onCameraReady={()=>{alert('相机准备就绪')}}
-                        onMountError={()=>{alert('相机打开失败')}}
-                        onPictureTaken={()=>{alert('拍照')}}
+                        // onCameraReady={()=>{alert('相机准备就绪')}}
+                        // onMountError={()=>{alert('相机打开失败')}}
+                        // onPictureTaken={()=>{alert('拍照')}}
                         onGoogleVisionBarcodesDetected={({ barcodes }) => {
                             console.log(barcodes)
                         }}
                     />
-                    <View style={styles.left}>
-                        
+                    <View style={styles.viewport}>
+                        <View style={styles.viewportT}></View>
+                        <View style={styles.viewportB}></View>
+                        <View style={styles.viewportL}></View>
+                        <View style={styles.viewportR}></View>
+                        <View style={styles.viewportContent}></View>
                     </View>
-                    <View style={styles.right}>
+                    <View style={styles.control}>
+                        <View style={styles.left}>
+                            <TouchableOpacity
+                                style={[styles.letf_btn]}
+                                activeOpacity={0.4}
+                                onPress={() => {alert('切换闪光灯状态')}}
+                            >
+                                <Image style={{ width: 28, height: 28 }} source={require("../../assets/image/icon_camera_flash_on.png")} />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.letf_btn]}
+                                activeOpacity={0.4}
+                                onPress={() => this.props.navigation.goBack()}
+                            >
+                                <Image style={{ width: 44, height: 44 }} source={require("../../assets/image/icon_camera_back.png")} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.right}>
+                            <TouchableOpacity
+                                style = {styles.capture}
+                                activeOpacity={0.6}
+                                onPress={this.takePicture.bind(this)}
+                            >
+                                <View style={styles.capture_icon}></View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    {/* <TouchableOpacity
-                        onPress={this.takePicture.bind(this)}
-                        style = {styles.capture}
-                    >
-                        <Text style={{fontSize: 14}}> SNAP </Text>
-                    </TouchableOpacity> */}
                 </View>}
             </View>
         );
@@ -114,14 +137,77 @@ const styles = StyleSheet.create({
         height: screen.height,
         flex: 1
     },
+    viewport: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+    },
+    viewportContent: {
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,.5)',
+        borderRadius: 10,
+        width: screen.width - 100,
+        height: screen.height - 240,
+        position: 'absolute',
+        top: screen.height/2 - ((screen.height - 240)/2),
+        left: screen.width/2 - ((screen.width - 100)/2),
+    },
+    control: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 2,
+    },
     left: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
         height: 48,
         width: screen.width,
-        backgroundColor: 'red',
-        flex: 1,
-        
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    letf_btn: {
+        width: 48,
+        height: 48,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     right: {
-
+        position: 'absolute',
+        top: screen.height - 60 - (screen.height - windowScreen.height),
+        left: 0,
+        right: 0,
+        height: 60 + (screen.height - windowScreen.height),
+        width: screen.width,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'flex-start',
+    },
+    capture: {
+        width: 60,
+        height: 60,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,.7)',
+        borderRadius: 30,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    capture_icon: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: 'rgba(255,255,255,0.8)',
     }
 });
