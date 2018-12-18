@@ -23,7 +23,7 @@ import {
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
-import {OcrApi} from '../../../service/urlService';
+import {SignUrl, OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
 
 export default class OcrGeneralocr extends Component {
@@ -136,7 +136,7 @@ export default class OcrGeneralocr extends Component {
             "image": this.state.base64,
             "image_url": "",
         }
-        HttpService.post('http://web.lilanjin.top/sign.php',{
+        HttpService.post(SignUrl,{
             'url': OcrApi.ocr_generalocr,
             'params': data
         })

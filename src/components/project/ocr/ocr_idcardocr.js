@@ -24,7 +24,7 @@ import {
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
-import {OcrApi} from '../../../service/urlService';
+import {SignUrl, OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
 
 export default class OcrIdcardocr extends Component {
@@ -34,6 +34,8 @@ export default class OcrIdcardocr extends Component {
         this.state = {
             ModalView: false,
             CameraView: false,
+            idCardFrontData: null,
+            idCardBackData: null,
         };
     }
 
@@ -61,53 +63,69 @@ export default class OcrIdcardocr extends Component {
                 <ScrollView>
                     <View style={styles.viewport}>
                         <View style={styles.viewport_item}>
-                            <Image style={{ width: 300, height: 190 }} source={require("../../../assets/image/front_effect.png")} />
+                            <Image style={{ width: 300, height: 190 }} source={ this.state.idCardFrontData?{uri: 'data:image/jpeg;base64,' + this.state.idCardFrontData}:require("../../../assets/image/front_effect.png") } />
                             <View style={styles.choice_wrap}>
-                                <TouchableOpacity
-                                    style={[styles.choice_btn]}
-                                    activeOpacity={0.8}
-                                    onPress={() => {
-                                        this.getTakePicture(
-                                            'TakePicture',
-                                            {
-                                                data: {
-                                                    type: 'idcard',
-                                                    side: 0,
-                                                    effect: require("../../../assets/image/idcard_front_effect.png"),
-                                                    width: screen.width - 100,
-                                                    height: 860*((screen.width - 100)/545),
+                                <Animatable.View animation="fadeInUp" duration={600} delay={400} easing="ease-out" iterationCount={1}>
+                                    <TouchableOpacity
+                                        style={[styles.choice_btn]}
+                                        activeOpacity={0.8}
+                                        onPress={() => {
+                                            this.getTakePicture(
+                                                'TakePicture',
+                                                {
+                                                    data: {
+                                                        type: 'idcard',
+                                                        side: 0,
+                                                        effect: require("../../../assets/image/idcard_front_effect.png"),
+                                                        width: screen.width - 100,
+                                                        height: 860*((screen.width - 100)/545),
+                                                    },
+                                                    callback: ((info) => {
+                                                        this.setState({
+                                                            idCardFrontData: info
+                                                        })
+                                                        console.log(info)
+                                                    })
                                                 }
-                                            }
-                                        )}
-                                    }
-                                >
-                                        <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
-                                </TouchableOpacity>
+                                            )}
+                                        }
+                                    >
+                                            <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
+                                    </TouchableOpacity>
+                                </Animatable.View>
                             </View>
                         </View>
                         <View style={styles.viewport_item}>
-                            <Image style={{ width: 300, height: 190 }} source={require("../../../assets/image/back_effect.png")} />
+                            <Image style={{ width: 300, height: 190 }} source={ this.state.idCardBackData?{uri: 'data:image/jpeg;base64,' + this.state.idCardBackData}:require("../../../assets/image/back_effect.png") } />
                             <View style={styles.choice_wrap}>
-                                <TouchableOpacity
-                                    style={[styles.choice_btn]}
-                                    activeOpacity={0.8}
-                                    onPress={() => {
-                                        this.getTakePicture(
-                                            'TakePicture',
-                                            {
-                                                data: {
-                                                    type: 'idcard',
-                                                    side: 1,
-                                                    effect: require("../../../assets/image/idcard_back_effect.png"),
-                                                    width: screen.width - 100,
-                                                    height: 860*((screen.width - 100)/545),
+                                <Animatable.View animation="fadeInUp" duration={600} delay={700} easing="ease-out" iterationCount={1}>
+                                    <TouchableOpacity
+                                        style={[styles.choice_btn]}
+                                        activeOpacity={0.8}
+                                        onPress={() => {
+                                            this.getTakePicture(
+                                                'TakePicture',
+                                                {
+                                                    data: {
+                                                        type: 'idcard',
+                                                        side: 1,
+                                                        effect: require("../../../assets/image/idcard_back_effect.png"),
+                                                        width: screen.width - 100,
+                                                        height: 860*((screen.width - 100)/545),
+                                                    },
+                                                    callback: ((info) => {
+                                                        this.setState({
+                                                            idCardBackData: info
+                                                        })
+                                                        console.log(info)
+                                                    })
                                                 }
-                                            }
-                                        )}
-                                    }
-                                >
+                                            )}
+                                        }
+                                    >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                </Animatable.View>
                             </View>
                         </View>
                     </View>
@@ -158,21 +176,21 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     choice_wrap: {
-        width: 60,
-        height: 30,
+        width: 42,
+        height: 42,
         position: 'absolute',
-        bottom: 190/2 - 15,
-        left: 300/2 - 30,
+        bottom: 190/2 - 21,
+        left: 300/2 - 21,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
     choice_btn: {
-        borderRadius: 15,
+        borderRadius: 21,
         overflow: 'hidden',
-        height: 30,
-        width: 60,
+        height: 42,
+        width: 42,
         backgroundColor: 'rgba(0,0,0,.3)',
         flex: 1,
         flexDirection: 'column',

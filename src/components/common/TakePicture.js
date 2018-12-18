@@ -28,6 +28,7 @@ export default class TakePicture extends Component {
         this.state = {
             viewCamera: false,
             photoResults: null,
+            photoState: false,
             cameraConfig: {
                 flashMode: {
                     index: 0,
@@ -92,8 +93,6 @@ export default class TakePicture extends Component {
         if (this.camera) {
             const options = { width: 1024, quality: 0.5, base64: true, pauseAfterCapture: true, orientation: 'landscapeLeft'};
             const data = await this.camera.takePictureAsync(options);
-            console.log(data);
-            alert('图像方向：' + data.pictureOrientation + '\n' + '设备方向：' + data.deviceOrientation);
             this.setState({
                 photoResults: data.base64
             });
@@ -102,13 +101,10 @@ export default class TakePicture extends Component {
 
     resetPicture (){
         this.setState({
-            photoResults: null
+            photoResults: null,
+            photoState: false
         });
         this.camera.resumePreview();
-    }
-
-    completePicture (){
-
     }
 
     componentWillMount(){
@@ -146,6 +142,7 @@ export default class TakePicture extends Component {
                         zoom={0} // 缩放比例
                         permissionDialogTitle={'使用相机许可'}
                         permissionDialogMessage={'我们需要你的许可才能使用你的照相手机'}
+                        onPictureTaken={()=>{this.setState({photoState: true})}}
                         onMountError={()=>{
                             toastUtil('相机打开失败');
                         }}
@@ -160,7 +157,7 @@ export default class TakePicture extends Component {
                             top: screen.height/2 - (data.height/2),
                             left: screen.width/2 - (data.width/2),
                         }]}>
-                            <Image style={{ width: data.width, height: data.height}} source={data.effect} />
+                            { !this.state.photoState && <Image style={{ width: data.width, height: data.height}} source={data.effect} />}
                         </View>
                     </View>
 
@@ -182,7 +179,7 @@ export default class TakePicture extends Component {
                             </TouchableOpacity>
                         </View>
                         {
-                            this.state.photoResults ? <View style={styles.right}></View>:<View style={styles.right}>
+                            this.state.photoState ? <View style={styles.right}></View>:<View style={styles.right}>
                                 <TouchableOpacity
                                     style = {styles.capture}
                                     activeOpacity={0.6}
@@ -193,7 +190,7 @@ export default class TakePicture extends Component {
                             </View>
                         }
                         {
-                            this.state.photoResults && <View style={[styles.right,{justifyContent: 'space-between',}]}>
+                            this.state.photoState && <View style={[styles.right,{justifyContent: 'space-between',}]}>
                                 <TouchableOpacity
                                     style={[styles.letf_btn]}
                                     activeOpacity={0.4}
@@ -204,7 +201,12 @@ export default class TakePicture extends Component {
                                 <TouchableOpacity
                                     style={[styles.letf_btn]}
                                     activeOpacity={0.4}
-                                    onPress={() => this.completePicture()}
+                                    onPress={() => {
+                                        if (this.props.navigation.state.params.callback) {
+                                            this.props.navigation.state.params.callback(this.state.photoResults)
+                                        }
+                                        this.props.navigation.goBack();
+                                    }}
                                 >
                                     <Image style={{ width: 50, height: 50 }} source={require("../../assets/image/icon_camera_complete.png")} />
                                 </TouchableOpacity>
