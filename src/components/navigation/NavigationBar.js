@@ -5,7 +5,8 @@ import {
     PixelRatio,
     Text,
     View,
-    StatusBar
+    StatusBar,
+    ViewPropTypes
 } from 'react-native';
 import {
     Demensions,
@@ -23,7 +24,7 @@ const StatusBarShape={
 
 export default class NavigationBar extends Component {
     static propTypes={
-        // style: View.propTypes.style,
+        style: ViewPropTypes.style,
         title: PropTypes.string,
         titleView: PropTypes.element,
         hide: PropTypes.bool,
@@ -51,7 +52,7 @@ export default class NavigationBar extends Component {
     componentWillMount() {
     }
     render() {
-        let status = <View style={[...this.props.style,styles.statusBar]}>
+        let status = <View style={[this.props.style, styles.statusBar]}>
             <StatusBar
                 {...this.props.statusBar}
                 backgroundColor={this.props.style.backgroundColor}

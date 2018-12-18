@@ -28,32 +28,32 @@ export default class HomePage extends Component {
         this.state = {
             homeList: HomeData
         };
-        // this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
-        //     BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
-        // );
+        this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
+            BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
+        );
     }
 
-    // componentDidMount() {
-    //     this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
-    //       BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
-    //     );
-    // }
+    componentDidMount() {
+        this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
+          BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
+        );
+    }
 
-    // onBackButtonPressAndroid = () => {
-    //     if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
-    //         //最近2秒内按过back键，可以退出应用。
-    //         BackHandler.exitApp();
-    //         return;
-    //     }
-    //     this.lastBackPressed = Date.now();
-    //     toastUtil('再按一次退出应用');
-    //     return true;
-    // };
+    onBackButtonPressAndroid = () => {
+        if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+            //最近2秒内按过back键，可以退出应用。
+            BackHandler.exitApp();
+            return;
+        }
+        this.lastBackPressed = Date.now();
+        toastUtil('再按一次退出应用');
+        return true;
+    };
 
-    // componentWillUnmount() {
-    //     this._didFocusSubscription && this._didFocusSubscription.remove();
-    //     this._willBlurSubscription && this._willBlurSubscription.remove();
-    // }
+    componentWillUnmount() {
+        this._didFocusSubscription && this._didFocusSubscription.remove();
+        this._willBlurSubscription && this._willBlurSubscription.remove();
+    }
 
     getPage(name, item) {
         this.props.navigation.navigate(name, item);

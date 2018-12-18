@@ -12,3 +12,6 @@ react-native v0.57.8
 
 第一次运行500
 npm uninstall babel-preset-react-native
+
+清除缓存
+react-native start --reset-cache
