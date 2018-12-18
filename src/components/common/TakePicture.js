@@ -27,6 +27,7 @@ export default class TakePicture extends Component {
         super();
         this.state = {
             viewCamera: false,
+            photoResults: null,
             cameraConfig: {
                 flashMode: {
                     index: 0,
@@ -38,6 +39,7 @@ export default class TakePicture extends Component {
     }
 
     setFlashMode() {
+        if(this.state.photoResults) return;
         switch(this.state.cameraConfig.flashMode.index){
             case 0:
                 this.setState({
@@ -88,11 +90,26 @@ export default class TakePicture extends Component {
 
     takePicture = async function() {
         if (this.camera) {
-            const options = { quality: 0.5, base64: true };
-            const data = await this.camera.takePictureAsync(options)
-            console.log(data.uri);
+            const options = { width: 1024, quality: 0.5, base64: true, pauseAfterCapture: true, orientation: 'landscapeLeft'};
+            const data = await this.camera.takePictureAsync(options);
+            console.log(data);
+            alert('图像方向：' + data.pictureOrientation + '\n' + '设备方向：' + data.deviceOrientation);
+            this.setState({
+                photoResults: data.base64
+            });
         }
     };
+
+    resetPicture (){
+        this.setState({
+            photoResults: null
+        });
+        this.camera.resumePreview();
+    }
+
+    completePicture (){
+
+    }
 
     componentWillMount(){
         setTimeout(() => {
@@ -129,18 +146,14 @@ export default class TakePicture extends Component {
                         zoom={0} // 缩放比例
                         permissionDialogTitle={'使用相机许可'}
                         permissionDialogMessage={'我们需要你的许可才能使用你的照相手机'}
-                        // onCameraReady={()=>{alert('相机准备就绪')}}
-                        // onMountError={()=>{alert('相机打开失败')}}
-                        // onPictureTaken={()=>{alert('拍照')}}
+                        onMountError={()=>{
+                            toastUtil('相机打开失败');
+                        }}
                         onGoogleVisionBarcodesDetected={({ barcodes }) => {
                             console.log(barcodes)
                         }}
                     />
                     <View style={styles.viewport}>
-                        <View style={styles.viewportT}></View>
-                        <View style={styles.viewportB}></View>
-                        <View style={styles.viewportL}></View>
-                        <View style={styles.viewportR}></View>
                         <View style={[styles.viewportContent, {
                             width: data.width,
                             height: data.height,
@@ -150,6 +163,7 @@ export default class TakePicture extends Component {
                             <Image style={{ width: data.width, height: data.height}} source={data.effect} />
                         </View>
                     </View>
+
                     <View style={styles.control}>
                         <View style={styles.left}>
                             <TouchableOpacity
@@ -167,15 +181,35 @@ export default class TakePicture extends Component {
                                 <Image style={{ width: 44, height: 44 }} source={require("../../assets/image/icon_camera_back.png")} />
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.right}>
-                            <TouchableOpacity
-                                style = {styles.capture}
-                                activeOpacity={0.6}
-                                onPress={this.takePicture.bind(this)}
-                            >
-                                <View style={styles.capture_icon}></View>
-                            </TouchableOpacity>
-                        </View>
+                        {
+                            this.state.photoResults ? <View style={styles.right}></View>:<View style={styles.right}>
+                                <TouchableOpacity
+                                    style = {styles.capture}
+                                    activeOpacity={0.6}
+                                    onPress={this.takePicture.bind(this)}
+                                >
+                                    <View style={styles.capture_icon}></View>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        {
+                            this.state.photoResults && <View style={[styles.right,{justifyContent: 'space-between',}]}>
+                                <TouchableOpacity
+                                    style={[styles.letf_btn]}
+                                    activeOpacity={0.4}
+                                    onPress={() => {this.resetPicture()}}
+                                >
+                                    <Image style={{ width: 50, height: 50 }} source={require("../../assets/image/icon_camera_remake.png")} />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.letf_btn]}
+                                    activeOpacity={0.4}
+                                    onPress={() => this.completePicture()}
+                                >
+                                    <Image style={{ width: 50, height: 50 }} source={require("../../assets/image/icon_camera_complete.png")} />
+                                </TouchableOpacity>
+                            </View>
+                        }
                     </View>
                 </View>}
             </View>
@@ -221,7 +255,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 2,
+        zIndex: 3,
     },
     left: {
         position: 'absolute',
@@ -246,6 +280,7 @@ const styles = StyleSheet.create({
         top: screen.height - 50 - (screen.height - windowScreen.height),
         left: 0,
         right: 0,
+        paddingHorizontal: 10,
         height: 50 + (screen.height - windowScreen.height),
         width: screen.width,
         flexDirection: 'row',
@@ -268,5 +303,13 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 24,
         backgroundColor: 'rgba(255,255,255,0.8)',
+    },
+    photoResults: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: screen.width,
+        height: screen.height,
+        zIndex: 2,
     }
 });
