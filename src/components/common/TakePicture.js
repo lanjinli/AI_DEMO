@@ -27,7 +27,63 @@ export default class TakePicture extends Component {
         super();
         this.state = {
             viewCamera: false,
+            cameraConfig: {
+                flashMode: {
+                    index: 0,
+                    type: RNCamera.Constants.FlashMode.off,
+                    img: require("../../assets/image/icon_camera_flash_off.png")
+                }
+            }
         };
+    }
+
+    setFlashMode() {
+        switch(this.state.cameraConfig.flashMode.index){
+            case 0:
+                this.setState({
+                    cameraConfig: {
+                        flashMode: {
+                            index: 1,
+                            type: RNCamera.Constants.FlashMode.on,
+                            img: require("../../assets/image/icon_camera_flash_on.png")
+                        }
+                    }
+                })
+                break;
+            case 1:
+                this.setState({
+                    cameraConfig: {
+                        flashMode: {
+                            index: 2,
+                            type: RNCamera.Constants.FlashMode.auto,
+                            img: require("../../assets/image/icon_camera_flash_auto.png")
+                        }
+                    }
+                })
+                break;
+            case 2:
+                this.setState({
+                    cameraConfig: {
+                        flashMode: {
+                            index: 3,
+                            type: RNCamera.Constants.FlashMode.torch,
+                            img: require("../../assets/image/icon_camera_flash_torch.png")
+                        }
+                    }
+                })
+                break;
+            case 3:
+                this.setState({
+                    cameraConfig: {
+                        flashMode: {
+                            index: 0,
+                            type: RNCamera.Constants.FlashMode.off,
+                            img: require("../../assets/image/icon_camera_flash_off.png")
+                        }
+                    }
+                })
+                break;
+        }
     }
 
     takePicture = async function() {
@@ -69,7 +125,7 @@ export default class TakePicture extends Component {
                         style = {styles.preview}
                         autoFocus = {RNCamera.Constants.AutoFocus.on} // 自动对焦
                         type={RNCamera.Constants.Type.back} // 指定摄像头
-                        flashMode={RNCamera.Constants.FlashMode.off} // 闪光灯
+                        flashMode={this.state.cameraConfig.flashMode.type} // 闪光灯
                         zoom={0} // 缩放比例
                         permissionDialogTitle={'使用相机许可'}
                         permissionDialogMessage={'我们需要你的许可才能使用你的照相手机'}
@@ -85,16 +141,23 @@ export default class TakePicture extends Component {
                         <View style={styles.viewportB}></View>
                         <View style={styles.viewportL}></View>
                         <View style={styles.viewportR}></View>
-                        <View style={styles.viewportContent}></View>
+                        <View style={[styles.viewportContent, {
+                            width: data.width,
+                            height: data.height,
+                            top: screen.height/2 - (data.height/2),
+                            left: screen.width/2 - (data.width/2),
+                        }]}>
+                            <Image style={{ width: data.width, height: data.height}} source={data.effect} />
+                        </View>
                     </View>
                     <View style={styles.control}>
                         <View style={styles.left}>
                             <TouchableOpacity
                                 style={[styles.letf_btn]}
                                 activeOpacity={0.4}
-                                onPress={() => {alert('切换闪光灯状态')}}
+                                onPress={() => {this.setFlashMode()}}
                             >
-                                <Image style={{ width: 28, height: 28 }} source={require("../../assets/image/icon_camera_flash_on.png")} />
+                                <Image style={{ width: 28, height: 28 }} source={this.state.cameraConfig.flashMode.img} />
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.letf_btn]}
@@ -148,13 +211,9 @@ const styles = StyleSheet.create({
     viewportContent: {
         borderStyle: 'solid',
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,.5)',
+        borderColor: '#1b4fd5',
         borderRadius: 10,
-        width: screen.width - 100,
-        height: screen.height - 240,
         position: 'absolute',
-        top: screen.height/2 - ((screen.height - 240)/2),
-        left: screen.width/2 - ((screen.width - 100)/2),
     },
     control: {
         position: 'absolute',
@@ -184,18 +243,18 @@ const styles = StyleSheet.create({
     },
     right: {
         position: 'absolute',
-        top: screen.height - 60 - (screen.height - windowScreen.height),
+        top: screen.height - 50 - (screen.height - windowScreen.height),
         left: 0,
         right: 0,
-        height: 60 + (screen.height - windowScreen.height),
+        height: 50 + (screen.height - windowScreen.height),
         width: screen.width,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'flex-start',
     },
     capture: {
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         borderStyle: 'solid',
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,.7)',
@@ -205,8 +264,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     capture_icon: {
-        width: 48,
-        height: 48,
+        width: 40,
+        height: 40,
         borderRadius: 24,
         backgroundColor: 'rgba(255,255,255,0.8)',
     }

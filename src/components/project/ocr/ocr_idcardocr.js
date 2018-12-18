@@ -66,7 +66,20 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.getTakePicture('TakePicture', {data: {type: 'idcard'}})}}
+                                    onPress={() => {
+                                        this.getTakePicture(
+                                            'TakePicture',
+                                            {
+                                                data: {
+                                                    type: 'idcard',
+                                                    side: 0,
+                                                    effect: require("../../../assets/image/idcard_front_effect.png"),
+                                                    width: screen.width - 100,
+                                                    height: 860*((screen.width - 100)/545),
+                                                }
+                                            }
+                                        )}
+                                    }
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
@@ -78,7 +91,20 @@ export default class OcrIdcardocr extends Component {
                                 <TouchableOpacity
                                     style={[styles.choice_btn]}
                                     activeOpacity={0.8}
-                                    onPress={() => {this.getTakePicture('TakePicture', {data: {type: 'idcard'}})}}
+                                    onPress={() => {
+                                        this.getTakePicture(
+                                            'TakePicture',
+                                            {
+                                                data: {
+                                                    type: 'idcard',
+                                                    side: 1,
+                                                    effect: require("../../../assets/image/idcard_back_effect.png"),
+                                                    width: screen.width - 100,
+                                                    height: 860*((screen.width - 100)/545),
+                                                }
+                                            }
+                                        )}
+                                    }
                                 >
                                         <Image style={{ width: 26, height: 26, tintColor: '#fff' }} source={require("../../../assets/image/icon_camera.png")} />
                                 </TouchableOpacity>
