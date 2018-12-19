@@ -1,5 +1,4 @@
 import * as Animatable from 'react-native-animatable';
-import { RNCamera, FaceDetector } from 'react-native-camera';
 
 import React, {Component} from 'react';
 import {
@@ -64,6 +63,7 @@ export default class OcrIdcardocr extends Component {
                     <View style={styles.viewport}>
                         <View style={styles.viewport_item}>
                             <Image style={{ width: 300, height: 190 }} source={ this.state.idCardFrontData?{uri: 'data:image/jpeg;base64,' + this.state.idCardFrontData}:require("../../../assets/image/front_effect.png") } />
+                            <Text style={styles.viewport_text}>正面</Text>
                             <View style={styles.choice_wrap}>
                                 <Animatable.View animation="fadeInUp" duration={600} delay={400} easing="ease-out" iterationCount={1}>
                                     <TouchableOpacity
@@ -97,6 +97,7 @@ export default class OcrIdcardocr extends Component {
                         </View>
                         <View style={styles.viewport_item}>
                             <Image style={{ width: 300, height: 190 }} source={ this.state.idCardBackData?{uri: 'data:image/jpeg;base64,' + this.state.idCardBackData}:require("../../../assets/image/back_effect.png") } />
+                            <Text style={styles.viewport_text}>反面</Text>
                             <View style={styles.choice_wrap}>
                                 <Animatable.View animation="fadeInUp" duration={600} delay={700} easing="ease-out" iterationCount={1}>
                                     <TouchableOpacity
@@ -174,6 +175,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         overflow: 'hidden',
         position: 'relative',
+    },
+    viewport_text: {
+        color: '#fff',
+        fontSize: 12,
+        position: 'absolute',
+        left: 10,
+        bottom: 10,
     },
     choice_wrap: {
         width: 42,

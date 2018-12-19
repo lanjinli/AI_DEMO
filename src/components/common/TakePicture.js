@@ -1,4 +1,5 @@
 import { RNCamera, FaceDetector } from 'react-native-camera';
+import * as Animatable from 'react-native-animatable';
 
 import React, {Component} from 'react';
 import {
@@ -144,6 +145,7 @@ export default class TakePicture extends Component {
                         permissionDialogMessage={'我们需要你的许可才能使用你的照相手机'}
                         onPictureTaken={()=>{this.setState({photoState: true})}}
                         onMountError={()=>{
+                            this.props.navigation.goBack();
                             toastUtil('相机打开失败');
                         }}
                         onGoogleVisionBarcodesDetected={({ barcodes }) => {
@@ -151,6 +153,7 @@ export default class TakePicture extends Component {
                         }}
                     />
                     <View style={styles.viewport}>
+                        <Animatable.View animation="fadeInRight" duration={1000} iterationDelay={1000} easing="ease-out" iterationCount={1}>
                         <View style={[styles.viewportContent, {
                             width: data.width,
                             height: data.height,
@@ -159,59 +162,55 @@ export default class TakePicture extends Component {
                         }]}>
                             { !this.state.photoState && <Image style={{ width: data.width, height: data.height}} source={data.effect} />}
                         </View>
+                        </Animatable.View>
+                        {this.state.photoState && <Animatable.View animation="fadeInLeft" duration={400} easing="ease-out" iterationCount={1}><Text style={styles.ResetPrompt}>触摸屏幕重新拍照</Text></Animatable.View>}
                     </View>
 
-                    <View style={styles.control}>
-                        <View style={styles.left}>
-                            <TouchableOpacity
-                                style={[styles.letf_btn]}
-                                activeOpacity={0.4}
-                                onPress={() => {this.setFlashMode()}}
-                            >
-                                <Image style={{ width: 28, height: 28 }} source={this.state.cameraConfig.flashMode.img} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.letf_btn]}
-                                activeOpacity={0.4}
-                                onPress={() => this.props.navigation.goBack()}
-                            >
-                                <Image style={{ width: 44, height: 44 }} source={require("../../assets/image/icon_camera_back.png")} />
-                            </TouchableOpacity>
-                        </View>
-                        {
-                            this.state.photoState ? <View style={styles.right}></View>:<View style={styles.right}>
-                                <TouchableOpacity
-                                    style = {styles.capture}
-                                    activeOpacity={0.6}
-                                    onPress={this.takePicture.bind(this)}
-                                >
-                                    <View style={styles.capture_icon}></View>
-                                </TouchableOpacity>
-                            </View>
-                        }
-                        {
-                            this.state.photoState && <View style={[styles.right,{justifyContent: 'space-between',}]}>
-                                <TouchableOpacity
-                                    style={[styles.letf_btn]}
-                                    activeOpacity={0.4}
-                                    onPress={() => {this.resetPicture()}}
-                                >
-                                    <Image style={{ width: 50, height: 50 }} source={require("../../assets/image/icon_camera_remake.png")} />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[styles.letf_btn]}
-                                    activeOpacity={0.4}
-                                    onPress={() => {
-                                        if (this.props.navigation.state.params.callback) {
-                                            this.props.navigation.state.params.callback(this.state.photoResults)
-                                        }
-                                        this.props.navigation.goBack();
-                                    }}
-                                >
-                                    <Image style={{ width: 50, height: 50 }} source={require("../../assets/image/icon_camera_complete.png")} />
-                                </TouchableOpacity>
-                            </View>
-                        }
+                    {
+                        this.state.photoState && <TouchableOpacity
+                            style = {styles.mask}
+                            activeOpacity={0}
+                            onPress={() => {this.resetPicture()}}
+                        ></TouchableOpacity>
+                    }
+
+                    <View style={styles.left}>
+                        <TouchableOpacity
+                            style={[styles.letf_btn]}
+                            activeOpacity={0.4}
+                            onPress={() => {this.setFlashMode()}}
+                        >
+                            <Image style={{ width: 28, height: 28 }} source={this.state.cameraConfig.flashMode.img} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.letf_btn]}
+                            activeOpacity={0.4}
+                            onPress={() => this.props.navigation.goBack()}
+                        >
+                            <Image style={{ width: 44, height: 44 }} source={require("../../assets/image/icon_camera_back.png")} />
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.right}>
+                        { !this.state.photoState ? <TouchableOpacity
+                            style = {styles.capture}
+                            activeOpacity={0.6}
+                            onPress={this.takePicture.bind(this)}
+                        >
+                            <View style={styles.capture_icon}></View>
+                        </TouchableOpacity>:
+                        <TouchableOpacity
+                            style={[styles.letf_btn]}
+                            activeOpacity={0.4}
+                            onPress={() => {
+                                if (this.props.navigation.state.params.callback) {
+                                    this.props.navigation.state.params.callback(this.state.photoResults)
+                                }
+                                this.props.navigation.goBack();
+                            }}
+                        >
+                            <Image style={{ width: 50, height: 50 }} source={require("../../assets/image/icon_camera_complete.png")} />
+                        </TouchableOpacity>}
                     </View>
                 </View>}
             </View>
@@ -251,20 +250,32 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         position: 'absolute',
     },
-    control: {
+    ResetPrompt: {
+        width: 200,
+        fontSize: 14,
+        color: 'rgba(255,255,255,0.5)',
+        textAlign: 'center',
+        transform: [{rotate:'90deg'}],
+        position: 'absolute',
+        top: screen.height/2,
+        left: -80,
+    },
+    mask: {
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
         zIndex: 3,
+        backgroundColor: 'rgba(0,0,0,0)',
     },
     left: {
         position: 'absolute',
-        top: 0,
+        top: 0, //STATUS_BAR_HEIGHT
         left: 0,
         right: 0,
         height: 48,
+        zIndex: 4,
         width: screen.width,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -279,15 +290,11 @@ const styles = StyleSheet.create({
     },
     right: {
         position: 'absolute',
-        top: screen.height - 50 - (screen.height - windowScreen.height),
-        left: 0,
-        right: 0,
-        paddingHorizontal: 10,
-        height: 50 + (screen.height - windowScreen.height),
-        width: screen.width,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'flex-start',
+        top: screen.height - 50 - (screen.height - windowScreen.height) - 10,
+        left: screen.width/2 - 25,
+        width: 50,
+        height: 50,
+        zIndex: 4,
     },
     capture: {
         width: 50,
