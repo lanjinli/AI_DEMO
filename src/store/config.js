@@ -64,16 +64,16 @@ export const HomeData = [
         ]
     },
     {
-        img: require('../assets/image/home_icon_02.png'),
-        title: '自然语言处理',
-        summary: '海量数据进行建模\n准确理解用户意图',
+        img: require('../assets/image/home_icon_03.png'),
+        title: '智能语音交互',
+        summary: '依托深度学习算法\n合成语音自然流畅',
         page: 'List',
         children: []
     },
     {
-        img: require('../assets/image/home_icon_03.png'),
-        title: '智能语音交互',
-        summary: '依托深度学习算法\n合成语音自然流畅',
+        img: require('../assets/image/home_icon_02.png'),
+        title: '自然语言处理',
+        summary: '海量数据进行建模\n准确理解用户意图',
         page: 'List',
         children: []
     },
