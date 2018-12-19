@@ -23,7 +23,7 @@ import {
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
-import {SignUrl, AppId, OcrApi} from '../../../service/urlService';
+import {SignUrl, AppId, ErrCode, OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
 import ToastLoading from '../../common/ToastLoading';
 
@@ -271,6 +271,13 @@ export default class OcrDriverlicenseocr extends Component {
                                     {this.state.resultData && this.state.resultData.msg}
                                     &nbsp;&nbsp;
                                     {this.state.resultData && 'code:'+this.state.resultData.ret}
+                                </Text>
+                                <Text style={styles.results_err_text}>
+                                    {
+                                        this.state.resultData && (
+                                            this.state.resultData.ret > 0 ? ErrCode[this.state.resultData.ret]:'系统出错'
+                                        )
+                                    }
                                 </Text>
                             </View>
                         )

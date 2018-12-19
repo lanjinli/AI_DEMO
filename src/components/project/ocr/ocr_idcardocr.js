@@ -23,7 +23,7 @@ import {
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
-import {SignUrl, AppId, OcrApi} from '../../../service/urlService';
+import {SignUrl, AppId, ErrCode, OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
 import ToastLoading from '../../common/ToastLoading';
 
@@ -313,16 +313,24 @@ export default class OcrIdcardocr extends Component {
                         ( (this.state.FrontJson && this.state.FrontJson.ret != 0) || (this.state.BackJson && this.state.BackJson.ret != 0) ) && <View style={styles.results}>
                             {
                                 (this.state.FrontJson && this.state.FrontJson.ret != 0) && <Text style={styles.results_err_text}>
-                                    {this.state.FrontJson && this.state.FrontJson.msg}
+                                    {this.state.FrontJson && '正面错误码：'+this.state.FrontJson.ret}
                                     &nbsp;&nbsp;
-                                    {this.state.FrontJson && 'code:'+this.state.FrontJson.ret}
+                                    {
+                                        this.state.FrontJson && (
+                                            this.state.FrontJson.ret > 0 ? ErrCode[this.state.FrontJson.ret]:'系统出错'
+                                        )
+                                    }
                                 </Text>
                             }
                             {
                                 (this.state.BackJson && this.state.BackJson.ret != 0) && <Text style={styles.results_err_text}>
-                                    {this.state.BackJson && this.state.BackJson.msg}
+                                    {this.state.BackJson && '反面错误码：'+this.state.BackJson.ret}
                                     &nbsp;&nbsp;
-                                    {this.state.BackJson && 'code:'+this.state.BackJson.ret}
+                                    {
+                                        this.state.BackJson && (
+                                            this.state.BackJson.ret > 0 ? ErrCode[this.state.BackJson.ret]:'系统出错'
+                                        )
+                                    }
                                 </Text>
                             }
                         </View>
