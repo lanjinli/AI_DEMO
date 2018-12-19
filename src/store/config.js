@@ -26,37 +26,40 @@ export const HomeData = [
             {
                 img: require('../assets/image/icon_ocr_04.png'),
                 title: '行驶证OCR',
+                type: 0,
                 summary: '识别行驶证图像上面的字段信息',
-                // page: 'OcrDriverlicenseocr',
-                page: ''
+                page: 'OcrDriverlicenseocr',
             },
             {
                 img: require('../assets/image/icon_ocr_05.png'),
                 title: '驾驶证OCR',
+                type: 1,
                 summary: '识别驾驶证图像上面的字段信息',
-                // page: 'OcrDriverlicenseocr',
-                page: ''
+                page: 'OcrDriverlicenseocr',
             },
             {
                 img: require('../assets/image/icon_ocr_06.png'),
                 title: '营业执照OCR',
                 summary: '识别营业执照上面的字段信息',
-                // page: 'OcrBizlicenseocr',
-                page: ''
+                page: 'OcrBizlicenseocr',
             },
             {
                 img: require('../assets/image/icon_ocr_07.png'),
                 title: '银行卡OCR',
                 summary: '识别银行卡上面的字段信息',
-                // page: 'OcrCreditcardocr',
-                page: ''
+                page: 'OcrCreditcardocr',
             },
             {
                 img: require('../assets/image/icon_ocr_08.png'),
                 title: '车牌OCR',
                 summary: '识别车牌上面的字段信息',
-                // page: 'OcrPlateocr',
-                page: ''
+                page: 'OcrPlateocr',
+            },
+            {
+                img: require('../assets/image/icon_ocr_09.png'),
+                title: '名片OCR',
+                summary: '识别名片图像上面的字段信息',
+                page: 'OcrBcocr',
             }
         ]
     },

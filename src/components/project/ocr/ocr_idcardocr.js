@@ -134,9 +134,9 @@ export default class OcrIdcardocr extends Component {
         if(this.state.idCardFrontData || this.state.idCardBackData){
             this.setState({
                 requestStatus: true,
-                resultData: null,
-                FrontJson: null,
-                BackJson: null,
+                // resultData: null,
+                // FrontJson: null,
+                // BackJson: null,
             });
         }
         if(this.state.idCardFrontData){
@@ -294,7 +294,7 @@ export default class OcrIdcardocr extends Component {
                         </TouchableOpacity>
                     </View>
                     {
-                        ( (this.state.FrontJson && this.state.FrontJson.ret == 0) || (this.state.BackJson && this.state.BackJson.ret == 0) ) && (this.state.resultData && !this.state.requestStatus) && (
+                        ( (this.state.FrontJson && this.state.FrontJson.ret == 0) || (this.state.BackJson && this.state.BackJson.ret == 0) ) && this.state.resultData && (
                             <View style={styles.results}>
                                 <View style={styles.TextView}>
                                     <Text style={styles.results_text}>姓名：{this.state.resultData.name}</Text>

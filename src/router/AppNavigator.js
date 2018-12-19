@@ -9,6 +9,12 @@ import ListPage from '../components/project/list';
 import OcrHandwritingocrPage from '../components/project/ocr/ocr_handwritingocr';
 import OcrGeneralocrPage from '../components/project/ocr/ocr_generalocr';
 import OcrIdcardocrPage from '../components/project/ocr/ocr_idcardocr';
+import OcrDriverlicenseocrPage from '../components/project/ocr/ocr_driverlicenseocr';
+import OcrBizlicenseocrPage from '../components/project/ocr/ocr_bizlicenseocr';
+import OcrCreditcardocrPage from '../components/project/ocr/ocr_creditcardocr';
+import OcrPlateocrPage from '../components/project/ocr/ocr_plateocr';
+import OcrBcocrPage from '../components/project/ocr/ocr_bcocr';
+
 import TakePicturePage from '../components/common/TakePicture';
 
 const AppNavigator = createStackNavigator(
@@ -54,6 +60,36 @@ const AppNavigator = createStackNavigator(
         },
         OcrIdcardocr: {
             screen: OcrIdcardocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrDriverlicenseocr: {
+            screen: OcrDriverlicenseocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrBizlicenseocr: {
+            screen: OcrBizlicenseocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrCreditcardocr: {
+            screen: OcrCreditcardocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrPlateocr: {
+            screen: OcrPlateocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        OcrBcocr: {
+            screen: OcrBcocrPage,
             navigationOptions: {
                 header: () => null
             }
