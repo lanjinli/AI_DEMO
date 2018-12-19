@@ -23,8 +23,9 @@ import {
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
-import {SignUrl, OcrApi} from '../../../service/urlService';
+import {SignUrl, AppId, OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
+import ToastLoading from '../../common/ToastLoading';
 
 export default class OcrIdcardocr extends Component {
 
@@ -35,12 +36,148 @@ export default class OcrIdcardocr extends Component {
             CameraView: false,
             idCardFrontData: null,
             idCardBackData: null,
+            requestStatus: false,
+            resultData: null,
+            FrontJson: null,
+            BackJson: null,
         };
     }
 
     getTakePicture(name, item) {
         this.props.navigation.navigate(name, item);
     }
+
+    // 请求接口
+    requestApi(card_type, image){
+        this._isMounted = true;
+
+        let data = {
+            "app_id": AppId,
+            "time_stamp": Math.round(new Date().getTime()/1000).toString(),
+            "nonce_str": Math.floor(Math.random()*100000).toString(),
+            "sign": "",
+            "image": image,
+            "card_type": card_type,
+        }
+        HttpService.post(SignUrl,{
+            'url': OcrApi.ocr_idcardocr,
+            'params': data
+        })
+        .then(result=>{
+            console.log(result);
+
+            if(!this._isMounted)return;
+
+            if(!this.state.requestStatus) return;
+
+            if(typeof result == "object"){
+                if(card_type == 0){
+                    this.setState({
+                        resultData: result.data,
+                        FrontJson: result,
+                        // idCardFrontData: result.data.frontimage,
+                    });
+                }else if(card_type == 1 && this.state.FrontJson){
+                    let newData = this.state.resultData;
+                    newData.backimage = result.data.backimage;
+                    newData.valid_date = result.data.valid_date;
+                    newData.authority = result.data.authority;
+                    this.setState({
+                        resultData: newData,
+                        BackJson: result
+                    });
+                }else if(card_type == 1 && !this.state.FrontJson){
+                    this.setState({
+                        resultData: result.data,
+                        BackJson: result,
+                        // idCardBackData: result.data.backimage,
+                    });
+                }
+            }else{
+                if(card_type){
+                    toastUtil('反面识别失败，未知错误');
+                }else{
+                    toastUtil('正面识别失败，未知错误');
+                }
+            }
+
+            if(card_type == 0 && !this.state.idCardBackData){
+                this.setState({
+                    requestStatus: false
+                });
+            }else if(card_type == 0 && this.state.idCardBackData){
+                this.requestApi(1, this.state.idCardBackData);
+            }else if(card_type == 1){
+                this.setState({
+                    requestStatus: false
+                });
+            }
+        })
+        .catch(error=>{
+            console.log(error);
+            if(!this._isMounted)return;
+            if(!this.state.requestStatus) return;
+            this.setState({
+                requestStatus: false
+            });
+            if(card_type){
+                toastUtil('反面识别失败，未知错误');
+            }else{
+                toastUtil('正面识别失败，未知错误');
+            }
+        })
+    }
+
+    // 开始识别
+    startIdentify(){
+        if(this.state.requestStatus)return;
+        if(this.state.idCardFrontData || this.state.idCardBackData){
+            this.setState({
+                requestStatus: true,
+                resultData: null,
+                FrontJson: null,
+                BackJson: null,
+            });
+        }
+        if(this.state.idCardFrontData){
+            this.requestApi(0, this.state.idCardFrontData);
+        }else if(this.state.idCardBackData){
+            this.requestApi(1, this.state.idCardBackData);
+        }else{
+            toastUtil('请先拍摄身份证照片');
+        }
+    }
+
+    // 绑定返回
+    componentWillMount() {
+        this._isMounted = true;
+        if (Platform.OS === 'android') {
+            this._didFocusSubscription = this.props.navigation.addListener('didFocus', payload =>
+                BackHandler.addEventListener('hardwareBackPress', this.cancelRequest)
+            );
+        }
+    }
+    
+    // 取消返回
+    componentDidMount() {
+        this._isMounted = false;
+        if (Platform.OS === 'android') {
+            this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
+                BackHandler.removeEventListener('hardwareBackPress', this.cancelRequest)
+            );
+        }
+    }
+
+    // 取消请求
+    cancelRequest = () => {
+        if(this.state.requestStatus){
+            this.setState({
+                requestStatus: false
+            });
+            return true;
+        }
+        return false;
+    };
 
     render() {
         const { data } = this.props.navigation.state.params;
@@ -62,7 +199,13 @@ export default class OcrIdcardocr extends Component {
                 <ScrollView>
                     <View style={styles.viewport}>
                         <View style={styles.viewport_item}>
-                            <Image style={{ width: 300, height: 190 }} source={ this.state.idCardFrontData?{uri: 'data:image/jpeg;base64,' + this.state.idCardFrontData}:require("../../../assets/image/front_effect.png") } />
+                            {
+                                (this.state.FrontJson && this.state.FrontJson.ret == 0 && !this.state.requestStatus)?(
+                                    <Image style={{ width: 300, height: 190 }} source={ {uri: 'data:image/jpeg;base64,' + this.state.resultData.frontimage} } />
+                                ):(
+                                    <Image style={{ width: 300, height: 190 }} source={ this.state.idCardFrontData?{uri: 'data:image/jpeg;base64,' + this.state.idCardFrontData}:require("../../../assets/image/front_effect.png") } />
+                                )
+                            }
                             <Text style={styles.viewport_text}>正面</Text>
                             <View style={styles.choice_wrap}>
                                 <Animatable.View animation="fadeInUp" duration={600} delay={400} easing="ease-out" iterationCount={1}>
@@ -82,9 +225,11 @@ export default class OcrIdcardocr extends Component {
                                                     },
                                                     callback: ((info) => {
                                                         this.setState({
-                                                            idCardFrontData: info
+                                                            idCardFrontData: info,
+                                                            resultData: null,
+                                                            FrontJson: null,
+                                                            BackJson: null,
                                                         })
-                                                        console.log(info)
                                                     })
                                                 }
                                             )}
@@ -96,6 +241,13 @@ export default class OcrIdcardocr extends Component {
                             </View>
                         </View>
                         <View style={styles.viewport_item}>
+                            {
+                                (this.state.BackJson && this.state.BackJson.ret == 0 && !this.state.requestStatus)?(
+                                    <Image style={{ width: 300, height: 190 }} source={ {uri: 'data:image/jpeg;base64,' + this.state.resultData.backimage} } />
+                                ):(
+                                    <Image style={{ width: 300, height: 190 }} source={ this.state.idCardBackData?{uri: 'data:image/jpeg;base64,' + this.state.idCardBackData}:require("../../../assets/image/back_effect.png") } />
+                                )
+                            }
                             <Image style={{ width: 300, height: 190 }} source={ this.state.idCardBackData?{uri: 'data:image/jpeg;base64,' + this.state.idCardBackData}:require("../../../assets/image/back_effect.png") } />
                             <Text style={styles.viewport_text}>反面</Text>
                             <View style={styles.choice_wrap}>
@@ -116,9 +268,11 @@ export default class OcrIdcardocr extends Component {
                                                     },
                                                     callback: ((info) => {
                                                         this.setState({
-                                                            idCardBackData: info
+                                                            idCardBackData: info,
+                                                            resultData: null,
+                                                            FrontJson: null,
+                                                            BackJson: null,
                                                         })
-                                                        console.log(info)
                                                     })
                                                 }
                                             )}
@@ -134,15 +288,47 @@ export default class OcrIdcardocr extends Component {
                         <TouchableOpacity
                             style={styles.btn_wrap}
                             activeOpacity={0.9}
-                            onPress={() => {alert('开始识别')}}
+                            onPress={() => {this.startIdentify()}}
                         >
                             <Text style={styles.btn_text}>识别 {data.title}</Text>
                         </TouchableOpacity>
                     </View>
+                    {
+                        ( (this.state.FrontJson && this.state.FrontJson.ret == 0) || (this.state.BackJson && this.state.BackJson.ret == 0) ) && (this.state.resultData && !this.state.requestStatus) && (
+                            <View style={styles.results}>
+                                <View style={styles.TextView}>
+                                    <Text style={styles.results_text}>姓名：{this.state.resultData.name}</Text>
+                                    <Text style={styles.results_text}>性别：{this.state.resultData.sex}</Text>
+                                    <Text style={styles.results_text}>民族：{this.state.resultData.nation}</Text>
+                                    <Text style={styles.results_text}>出生日期：{this.state.resultData.birth}</Text>
+                                    <Text style={styles.results_text}>地址：{this.state.resultData.address}</Text>
+                                    <Text style={styles.results_text}>身份证号：{this.state.resultData.id}</Text>
+                                    <Text style={styles.results_text}>证件的有效期：{this.state.resultData.valid_date}</Text>
+                                    <Text style={styles.results_text}>发证机关：{this.state.resultData.authority}</Text>
+                                </View>
+                            </View>
+                        )
+                    }
+                    {
+                        ( (this.state.FrontJson && this.state.FrontJson.ret != 0) || (this.state.BackJson && this.state.BackJson.ret != 0) ) && <View style={styles.results}>
+                            {
+                                (this.state.FrontJson && this.state.FrontJson.ret != 0) && <Text style={styles.results_err_text}>
+                                    {this.state.FrontJson && this.state.FrontJson.msg}
+                                    &nbsp;&nbsp;
+                                    {this.state.FrontJson && 'code:'+this.state.FrontJson.ret}
+                                </Text>
+                            }
+                            {
+                                (this.state.BackJson && this.state.BackJson.ret != 0) && <Text style={styles.results_err_text}>
+                                    {this.state.BackJson && this.state.BackJson.msg}
+                                    &nbsp;&nbsp;
+                                    {this.state.BackJson && 'code:'+this.state.BackJson.ret}
+                                </Text>
+                            }
+                        </View>
+                    }
                 </ScrollView>
-                {
-                    this.state.CameraView && <TakePicture/>
-                }
+                {this.state.requestStatus && <ToastLoading/>}
             </View>
         );
     }
@@ -204,14 +390,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    imgLoad: {
-        position: 'absolute',
-        top: screen.width/2 - 10,
-        left: screen.width/2 - 10,
-        width: 20,
-        height: 20,
-        zIndex: 1,
     },
     results: {
         paddingHorizontal: 10,

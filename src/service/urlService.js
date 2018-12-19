@@ -1,5 +1,6 @@
 // export const SignUrl = 'http://web.lilanjin.top/sign.php';
 export const SignUrl = 'http://132.232.31.167/sign.php';
+export const AppId = '2109841751';
 
 export const OcrApi = {
     ocr_handwritingocr: 'https://api.ai.qq.com/fcgi-bin/ocr/ocr_handwritingocr',

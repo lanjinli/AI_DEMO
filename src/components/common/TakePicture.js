@@ -153,7 +153,7 @@ export default class TakePicture extends Component {
                         }}
                     />
                     <View style={styles.viewport}>
-                        <Animatable.View animation="fadeInRight" duration={1000} iterationDelay={1000} easing="ease-out" iterationCount={1}>
+                        <Animatable.View animation="fadeInRight" duration={800} iterationDelay={400} easing="ease-out" iterationCount={1}>
                         <View style={[styles.viewportContent, {
                             width: data.width,
                             height: data.height,

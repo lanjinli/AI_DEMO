@@ -23,8 +23,9 @@ import {
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
-import {SignUrl, OcrApi} from '../../../service/urlService';
+import {SignUrl, AppId, OcrApi} from '../../../service/urlService';
 import formatJson from '../../../constants/formatJson';
+import ToastLoading from '../../common/ToastLoading';
 
 export default class OcrHandwritingocr extends Component {
 
@@ -129,7 +130,7 @@ export default class OcrHandwritingocr extends Component {
         });
 
         let data = {
-            "app_id": "2109841751",
+            "app_id": AppId,
             "time_stamp": Math.round(new Date().getTime()/1000).toString(),
             "nonce_str": Math.floor(Math.random()*100000).toString(),
             "sign": "",
@@ -276,17 +277,7 @@ export default class OcrHandwritingocr extends Component {
                     }
                 </ScrollView>
                 {
-                    this.state.requestStatus && <Animatable.View style={styles.requestStatusView} animation="fadeInUp" easing="ease-out" iterationCount={1} duration={300}>
-                        <View style={styles.requestStatusContentView}>
-                            <ActivityIndicator
-                                style={styles.requestLoad}
-                                color='#fff'
-                                animating={true}
-                                size="small"
-                            />
-                            <Text style={styles.requestText}>正在识别</Text>
-                        </View>
-                    </Animatable.View>
+                    this.state.requestStatus && <ToastLoading />
                 }
             </View>
         );
@@ -304,40 +295,6 @@ const styles = StyleSheet.create({
         height: NAVBSR_HEIGHT,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    requestStatusDialog: {
-        opacity: 0.5,
-        backgroundColor: '#000',
-    },
-    requestStatusView: {
-        position: 'absolute',
-        width: screen.width,
-        height: screen.height - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT),
-        top: STATUS_BAR_HEIGHT + NAVBSR_HEIGHT,
-        left: 0,
-    },
-    requestStatusContentView: {
-        position: 'absolute',
-        left: screen.width/2 - 50,
-        top: (screen.height - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT))/2 - 100,
-        paddingLeft: 18,
-        paddingRight: 18,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,.65)',
-        borderRadius: 4,
-        width: 100,
-        height: 100,
-    },
-    requestLoad: {
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-    },
-    requestText: {
-        color: '#fff',
-        fontSize: 15,
-        textAlign: 'center',
-        marginBottom: 5,
     },
     viewport: {
         width: screen.width,
