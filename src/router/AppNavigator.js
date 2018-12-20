@@ -15,6 +15,8 @@ import OcrCreditcardocrPage from '../components/project/ocr/ocr_creditcardocr';
 import OcrPlateocrPage from '../components/project/ocr/ocr_plateocr';
 import OcrBcocrPage from '../components/project/ocr/ocr_bcocr';
 
+import AaiAsrPage from '../components/project/aai/aai_asr.js';
+
 import TakePicturePage from '../components/common/TakePicture';
 
 const AppNavigator = createStackNavigator(
@@ -90,6 +92,12 @@ const AppNavigator = createStackNavigator(
         },
         OcrBcocr: {
             screen: OcrBcocrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        AaiAsr: {
+            screen: AaiAsrPage,
             navigationOptions: {
                 header: () => null
             }

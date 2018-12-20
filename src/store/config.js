@@ -108,7 +108,26 @@ export const HomeData = [
         title: '智能语音交互',
         summary: '依托深度学习算法\n合成语音自然流畅',
         page: 'List',
-        children: []
+        children: [
+            {
+                img: require('../assets/image/icon_aai_01.png'),
+                title: '语音识别-echo版',
+                summary: '对音频进行语音识别，并返回语音的文字内容',
+                page: 'AaiAsr'
+            },
+            {
+                img: require('../assets/image/icon_aai_01.png'),
+                title: '语音识别-AI Lab',
+                summary: '对音频进行流式识别，轻松实现边录音边识别',
+                page: 'AaiAsr'
+            },
+            {
+                img: require('../assets/image/icon_aai_01.png'),
+                title: '语音识别-WeChat AI',
+                summary: '对音频进行流式识别，轻松实现边录音边识别',
+                page: 'AaiAsr'
+            },
+        ]
     },
     {
         img: require('../assets/image/home_icon_02.png'),
