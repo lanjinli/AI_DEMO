@@ -46,7 +46,7 @@ export default class ListPage extends Component {
                         </TouchableOpacity>
                     }
                 />
-                <ScrollView>
+                <ScrollView style={styles.list}>
                     <View style={styles.banner}>
                         <LinearGradient start={{ x: 0.25, y: 0.25 }} end={{ x: 0.75, y: 0.75 }} colors={['#1b4fd5', '#1657da']} style={styles.banner_bg}>
                             <Animatable.View animation="pulse" duration={1000} iterationDelay={1000} iterationCount="infinite" direction="normal">
@@ -106,6 +106,9 @@ const styles = StyleSheet.create({
         height: NAVBSR_HEIGHT,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    list:{
+        minHeight: screen.height - NAVBSR_HEIGHT - STATUS_BAR_HEIGHT,
     },
     banner: {
         height: 150,
