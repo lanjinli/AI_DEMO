@@ -29,12 +29,7 @@ import HttpService from '../../../service/httpService';
 import {SignUrl, AppId, ErrCode} from '../../../service/urlService';
 import ToastLoading from '../../common/ToastLoading';
 
-let demoAudio = require('../../../assets/sound/prompt.mp3');
-const prompt = new Sound(demoAudio, (e) => {
-    if (e) {
-        return;
-    }
-});
+
 
 export default class AaiAsr extends Component {
 
@@ -44,6 +39,19 @@ export default class AaiAsr extends Component {
         };
     }
 
+    componentWillMount() {
+        this.demoAudio = require('../../../assets/sound/prompt.mp3');
+        this.prompt = new Sound(this.demoAudio, (e) => {
+            if (e) {
+                return;
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.prompt.release();
+    }
+
     voicePlay(){
         this.voiceAnimation.play();
         Vibration.vibrate(50);
@@ -51,7 +59,7 @@ export default class AaiAsr extends Component {
 
     voiceStop(){
         this.voiceAnimation.reset();
-        prompt.play();
+        this.prompt.play();
     }
 
     render() {
