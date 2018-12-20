@@ -10,12 +10,22 @@ export const HomeData = [
                 title: '手写体OCR',
                 summary: '检测和识别图像上面手写体的字段信息',
                 page: 'OcrHandwritingocr',
+                preset: {
+                    uri: 'https://yyb.gtimg.com/ai/assets/ai-demo/large/hd-7-lg.jpg',
+                    width: 600,
+                    height: 600
+                }
             },
             {
                 img: require('../assets/image/icon_ocr_02.png'),
                 title: '通用OCR',
                 summary: '识别上传图像上面的字段信息',
                 page: 'OcrGeneralocr',
+                preset: {
+                    uri: 'https://yyb.gtimg.com/aiplat/static/ai-demo/large/o-6.jpg',
+                    width: 600,
+                    height: 600
+                }
             },
             {
                 img: require('../assets/image/icon_ocr_03.png'),
@@ -29,6 +39,11 @@ export const HomeData = [
                 type: 0,
                 summary: '识别行驶证图像上面的字段信息',
                 page: 'OcrDriverlicenseocr',
+                preset: {
+                    uri: 'https://yyb.gtimg.com/aiplat/static/ai-demo/large/odemo-pic-3.jpg',
+                    width: 800,
+                    height: 512
+                }
             },
             {
                 img: require('../assets/image/icon_ocr_05.png'),
@@ -36,30 +51,55 @@ export const HomeData = [
                 type: 1,
                 summary: '识别驾驶证图像上面的字段信息',
                 page: 'OcrDriverlicenseocr',
+                preset: {
+                    uri: 'https://yyb.gtimg.com/aiplat/static/ai-demo/large/odemo-pic-4.jpg',
+                    width: 680,
+                    height: 436
+                }
             },
             {
                 img: require('../assets/image/icon_ocr_06.png'),
                 title: '营业执照OCR',
                 summary: '识别营业执照上面的字段信息',
                 page: 'OcrBizlicenseocr',
+                preset: {
+                    uri: 'https://yyb.gtimg.com/aiplat/static/ai-demo/large/odemo-pic-5.jpg',
+                    width: 500,
+                    height: 693
+                }
             },
             {
                 img: require('../assets/image/icon_ocr_07.png'),
                 title: '银行卡OCR',
                 summary: '识别银行卡上面的字段信息',
                 page: 'OcrCreditcardocr',
+                preset: {
+                    uri: 'https://p.qpic.cn/zc_pic/0/1ccd9a5be6a581a0b0b28ad0af49117815222914526139/0',
+                    width: 600,
+                    height: 300
+                }
             },
             {
                 img: require('../assets/image/icon_ocr_08.png'),
                 title: '车牌OCR',
                 summary: '识别车牌上面的字段信息',
                 page: 'OcrPlateocr',
+                preset: {
+                    uri: 'https://yyb.gtimg.com/ai/assets/ai-demo/large/plate-1-lg.jpg',
+                    width: 400,
+                    height: 400
+                }
             },
             {
                 img: require('../assets/image/icon_ocr_09.png'),
                 title: '名片OCR',
                 summary: '识别名片图像上面的字段信息',
                 page: 'OcrBcocr',
+                preset: {
+                    uri: 'https://yyb.gtimg.com/aiplat/static/ai-demo/large/odemo-pic-2.jpg',
+                    width: 408,
+                    height: 226
+                }
             }
         ]
     },

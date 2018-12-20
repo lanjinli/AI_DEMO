@@ -19,7 +19,8 @@ import {
     screen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
-    toastUtil
+    toastUtil,
+    GetImageBase64
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
@@ -166,6 +167,7 @@ export default class OcrCreditcardocr extends Component {
 
     // 绑定返回
     componentWillMount() {
+        this._getImageBase64();
         this._isMounted = true;
         if (Platform.OS === 'android') {
             this._didFocusSubscription = this.props.navigation.addListener('didFocus', payload =>
@@ -194,6 +196,21 @@ export default class OcrCreditcardocr extends Component {
         }
         return false;
     };
+
+    // 图片转base64
+    _getImageBase64(){
+        let {preset} = this.props.navigation.state.params.data;
+        GetImageBase64(preset,(info) => {
+            this.setState({
+                base64: info.base64,
+                avatarSource: { uri: 'data:image/jpeg;base64,' + info.base64 },
+                viewport_img: {
+                    width: info.width,
+                    height: info.height,
+                }
+            })
+        });
+    }
 
     render() {
         const { data } = this.props.navigation.state.params;

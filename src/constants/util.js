@@ -2,7 +2,9 @@ import React from 'react';
 import {
     Platform,
     PixelRatio,
-    NativeModules
+    NativeModules,
+    ImageEditor,
+    ImageStore
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 
@@ -63,3 +65,42 @@ export const toastUtil = (content, time = 'SHORT') => {
         },
     });
 };
+
+
+export const GetImageBase64 = (data, callback) => {
+    ImageEditor.cropImage(data.uri,{
+        size: {
+            width: data.width,
+            height: data.height,
+        },
+        offset:{
+            x:0,
+            y:0
+        }
+    },uri=>{
+        ImageStore.getBase64ForTag(uri, base64ImageData=>{
+            // ImageStore.removeImageForTag(uri);
+            let imgWidth,imgHeight;
+            if(data.width > data.height){
+                imgWidth = screen.width;
+                imgHeight = data.height/(data.width/screen.width);
+            }else if(data.width < data.height){
+                imgWidth = data.width/(data.height/screen.width);
+                imgHeight = screen.width;
+            }else{
+                imgWidth = screen.width;
+                imgHeight = screen.width;
+            }
+            callback({
+                base64: base64ImageData,
+                width: imgWidth,
+                height: imgHeight
+            });
+        },err=>{
+            // ImageStore.removeImageForTag(uri);
+            toastUtil('加载预设图片失败');
+        })
+    },err=>{
+        toastUtil('加载预设图片失败');
+    })
+}
