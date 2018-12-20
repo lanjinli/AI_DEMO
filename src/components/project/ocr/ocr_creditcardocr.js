@@ -230,7 +230,9 @@ export default class OcrCreditcardocr extends Component {
                 />
                 <ScrollView>
                     <View style={styles.viewport}>
-                        <Image style={this.state.viewport_img} source={this.state.avatarSource} onLoad={()=>{this.setState({readImg: false})}}/>
+                    <Animatable.View animation="fadeIn" duration={400} delay={800} easing="ease-out" iterationCount={1}>
+                            <Image style={this.state.viewport_img} source={this.state.avatarSource} onLoad={()=>{this.setState({readImg: false})}}/>
+                        </Animatable.View>
                         {this.state.readImg && <ActivityIndicator
                             style={styles.imgLoad}
                             color='#abacac'
