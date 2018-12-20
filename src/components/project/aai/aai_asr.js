@@ -1,5 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 import LottieView from 'lottie-react-native';
+import Sound from 'react-native-sound';
 
 import React, {Component} from 'react';
 import {
@@ -12,7 +13,8 @@ import {
     TouchableHighlight,
     TouchableWithoutFeedback,
     ScrollView,
-    BackHandler
+    BackHandler,
+    Vibration
 } from 'react-native';
 import {
     Demensions,
@@ -27,6 +29,13 @@ import HttpService from '../../../service/httpService';
 import {SignUrl, AppId, ErrCode} from '../../../service/urlService';
 import ToastLoading from '../../common/ToastLoading';
 
+let demoAudio = require('../../../assets/sound/prompt.mp3');
+const prompt = new Sound(demoAudio, (e) => {
+    if (e) {
+        return;
+    }
+});
+
 export default class AaiAsr extends Component {
 
     constructor() {
@@ -37,12 +46,12 @@ export default class AaiAsr extends Component {
 
     voicePlay(){
         this.voiceAnimation.play();
-        // Or set a specific startFrame and endFrame with:
-        // this.animation.play(30, 120);
+        Vibration.vibrate(50);
     }
 
     voiceStop(){
         this.voiceAnimation.reset();
+        prompt.play();
     }
 
     render() {
