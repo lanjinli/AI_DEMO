@@ -24,7 +24,6 @@ import {
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil,
-    GetImageBase64
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
 import HttpService from '../../../service/httpService';
@@ -36,28 +35,17 @@ export default class AaiAsr extends Component {
     constructor() {
         super();
         this.state = {
-            currentTime: 0.0,   //开始录音到现在的持续时间
+            currentTime: 0,   //开始录音到现在的持续时间
             recording: false,   //是否正在录音
             stoppedRecording: false,    //是否停止了录音
             finished: false,    //是否完成录音
             audioPath: AudioUtils.DocumentDirectoryPath + '/test.aac',  //路径下的文件名
             hasPermission: undefined,   //是否获取权限
+            requestStatus: false, //请求状态
         };
     }
 
-    _renderButton(title, onPress, active) {
-        var style = (active) ? styles.activeButtonText : styles.buttonText;
-
-        return (
-            <TouchableHighlight style={styles.button} onPress={onPress}>
-            <Text style={style}>
-                {title}
-            </Text>
-            </TouchableHighlight>
-        );
-    }
-
-    // 执行录音的方法
+    // 初始化录音配置
     prepareRecordingPath(audioPath){
         AudioRecorder.prepareRecordingAtPath(audioPath, {
           SampleRate: 22050,
@@ -66,51 +54,6 @@ export default class AaiAsr extends Component {
           AudioEncoding: "aac",
           AudioEncodingBitRate: 32000
         });
-    }
-
-    // 停止录音
-    async _stop() {
-        if (!this.state.recording) {
-          console.warn('Can\'t stop, not recording!');
-          return;
-        }
-  
-        this.setState({stoppedRecording: true, recording: false});
-  
-        try {
-          const filePath = await AudioRecorder.stopRecording();
-  
-          if (Platform.OS === 'android') {
-            this._finishRecording(true, filePath);
-          }
-          return filePath;
-        } catch (error) {
-          console.error(error);
-        }
-    }
-
-    // 播放录音
-    async _play() {
-        if (this.state.recording) {
-          await this._stop();
-        }
-        setTimeout(() => {
-          var sound = new Sound(this.state.audioPath, '', (error) => {
-            if (error) {
-              console.log('failed to load the sound', error);
-            }
-          });
-  
-          setTimeout(() => {
-            sound.play((success) => {
-              if (success) {
-                console.log('successfully finished playing');
-              } else {
-                console.log('playback failed due to audio decoding errors');
-              }
-            });
-          }, 100);
-        }, 100);
     }
 
     // 记录
@@ -138,13 +81,65 @@ export default class AaiAsr extends Component {
         }
     }
 
+    // 停止录音
+    async _stop(type) {
+        if (!this.state.recording) {
+          console.warn('不能停止，没有录音');
+          return;
+        }
+        this.setState({
+            stoppedRecording: true,
+            recording: false,
+        });
+        try {
+            const filePath = await AudioRecorder.stopRecording();
+            if (Platform.OS === 'android') {
+                this._finishRecording(type, filePath);
+            }
+            return filePath;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // 播放录音
+    async _play() {
+        if (this.state.recording) {
+          await this._stop();
+        }
+        setTimeout(() => {
+          var sound = new Sound(this.state.audioPath, '', (error) => {
+            if (error) {
+              console.log('failed to load the sound', error);
+            }
+          });
+  
+          setTimeout(() => {
+            sound.play((success) => {
+              if (success) {
+                console.log('successfully finished playing');
+              } else {
+                console.log('playback failed due to audio decoding errors');
+              }
+            });
+          }, 100);
+        }, 100);
+    }
+
     // 完成记录
     _finishRecording(didSucceed, filePath, fileSize) {
-        this.setState({ finished: didSucceed });
-        console.warn(`Finished recording of duration ${this.state.currentTime} seconds at path: ${filePath} and size of ${fileSize || 0} bytes`);
+        this.setState({
+            finished: didSucceed,
+            requestStatus: didSucceed
+        });
+        // console.warn(`Finished recording of duration ${this.state.currentTime} seconds at path: ${filePath} and size of ${fileSize || 0} bytes`);
     }
 
     componentDidMount() {
+        // 配置音效文件
+        this.demoAudio = require('../../../assets/sound/prompt.mp3');
+        this.prompt = new Sound(this.demoAudio, (e) => {});
+
         // 页面加载完成后获取权限
         AudioRecorder.requestAuthorization().then((isAuthorised) => {
             this.setState({ hasPermission: isAuthorised });
@@ -166,29 +161,36 @@ export default class AaiAsr extends Component {
         });
     }
 
-    componentWillMount() {
-        this.demoAudio = require('../../../assets/sound/prompt.mp3');
-        this.prompt = new Sound(this.demoAudio, (e) => {
-            if (e) {
-                return;
-            }
-        });
-    }
-
     componentWillUnmount() {
         this.prompt.release();
     }
 
+    // 开始录音
     voicePlay(){
+        // this.throttlingTime = Date.now();
         this.voiceAnimation.play();
         Vibration.vibrate(50);
         this._record();
     }
 
+    // 结束录音
     voiceStop(){
-        this.voiceAnimation.reset();
-        this.prompt.play();
-        // this._play();
+        // if (this.throttlingTime && this.throttlingTime + 1000 >= Date.now()) {
+        if (this.state.currentTime < 1) {
+            this.voiceAnimation.reset();
+            setTimeout(()=>{
+                this._stop(false);
+            },400);
+        }else{
+            this.voiceAnimation.reset();
+            this.prompt.play();
+            this._stop(true);
+        }
+    }
+
+    // 触发按钮
+    pressVoice(){
+        this.state.recording ? this.voiceStop() : this.voicePlay();
     }
 
     render() {
@@ -207,16 +209,20 @@ export default class AaiAsr extends Component {
                         </TouchableOpacity>
                     }
                 />
-                <View style={styles.container}>
-                    {this._renderButton("RECORD 录音", () => {this._record()}, this.state.recording )}
-                    {this._renderButton("PLAY 播放", () => {this._play()} )}
-                    {this._renderButton("STOP 停止", () => {this._stop()} )}
-                    <Text style={styles.progressText}>{this.state.currentTime}s</Text>
-                </View>
-                {/* <ScrollView>
-                    
-                </ScrollView> */}
+                <ScrollView>
+                </ScrollView>
                 <View style={styles.voice}>
+                    <View style={styles.voice_time}>
+                        {
+                            this.state.currentTime > 0 ? (
+                                <Animatable.View animation="fadeInUp" duration={400} iterationCount={1} direction="normal">
+                                    <Text style={[styles.voice_time_text,{fontSize: 20,}]}>{this.state.currentTime}s</Text>
+                                </Animatable.View>
+                            ) : (
+                                this.state.recording ? <Text style={styles.voice_time_text}>松开进行识别</Text> :  <Text style={styles.voice_time_text}>按下开始录音</Text> 
+                            )
+                        }
+                    </View>
                     <View style={styles.voice_wrap}>
                         <LottieView
                             style={styles.voice_icon}
@@ -233,47 +239,22 @@ export default class AaiAsr extends Component {
                     <View style={styles.voice_box}>
                         <TouchableWithoutFeedback
                             style={styles.voice_btn}
-                            onPressIn={()=>{this.voicePlay()}}
-                            onPress={()=>{this.voiceStop()}}
+                            onPressIn={()=>{this.pressVoice()}}
+                            onPress={()=>{this.pressVoice()}}
                         >
                             <View style={styles.voice_btn}></View>
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
+                {
+                    this.state.requestStatus && <ToastLoading />
+                }
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#2b608a",
-    },
-    controls: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1,
-    },
-    progressText: {
-        paddingTop: 50,
-        fontSize: 50,
-        color: "#fff"
-    },
-    button: {
-        padding: 20
-    },
-    disabledButtonText: {
-        color: '#eee'
-    },
-    buttonText: {
-        fontSize: 20,
-        color: "#fff"
-    },
-    activeButtonText: {
-        fontSize: 20,
-        color: "#B81F00"
-    },
     flex: {
         flex: 1,
         backgroundColor: '#fff',
@@ -291,6 +272,17 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: -30,
         left: 0,
+    },
+    voice_time: {
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    voice_time_text: {
+        textAlign: 'center',
+        fontSize: 15,
+        lineHeight: 38,
+        color: '#b9b9b9',
     },
     voice_box: {
         width: 80,

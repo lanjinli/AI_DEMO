@@ -1,4 +1,5 @@
 import * as Animatable from 'react-native-animatable';
+import LottieView from 'lottie-react-native';
 
 import React, { Component } from 'react';
 import {
@@ -21,11 +22,18 @@ export default class ToastLoading extends Component {
         return (
             <Animatable.View style={styles.requestStatusView} animation="fadeInUp" easing="ease-out" iterationCount={1} duration={300}>
                 <View style={styles.requestStatusContentView}>
-                    <ActivityIndicator
+                    {/* <ActivityIndicator
                         style={styles.requestLoad}
                         color='#fff'
                         animating={true}
                         size="small"
+                    /> */}
+                    <LottieView
+                        style={styles.requestLoad}
+                        source={require('../../assets/animotion/material_wave_loading.json')}
+                        autoPlay={true}
+                        loop={true}
+                        speed={1.2}
                     />
                     <Text style={styles.requestText}>正在识别</Text>
                 </View>
@@ -41,6 +49,7 @@ const styles = StyleSheet.create({
         height: screen.height - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT),
         top: STATUS_BAR_HEIGHT + NAVBSR_HEIGHT,
         left: 0,
+        zIndex: 100,
     },
     requestStatusContentView: {
         position: 'absolute',
@@ -56,8 +65,10 @@ const styles = StyleSheet.create({
         height: 100,
     },
     requestLoad: {
-        paddingHorizontal: 20,
-        paddingVertical: 20,
+        // paddingHorizontal: 20,
+        // paddingVertical: 20,
+        width: 100,
+        height: 60
     },
     requestText: {
         color: '#fff',
