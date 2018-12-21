@@ -38,7 +38,6 @@ export default class AaiAsr extends Component {
         this.state = {
             currentTime: 0.0,   //开始录音到现在的持续时间
             recording: false,   //是否正在录音
-            paused: false,     //是否暂停录音
             stoppedRecording: false,    //是否停止了录音
             finished: false,    //是否完成录音
             audioPath: AudioUtils.DocumentDirectoryPath + '/test.aac',  //路径下的文件名
@@ -49,18 +48,6 @@ export default class AaiAsr extends Component {
     _renderButton(title, onPress, active) {
         var style = (active) ? styles.activeButtonText : styles.buttonText;
 
-        return (
-            <TouchableHighlight style={styles.button} onPress={onPress}>
-            <Text style={style}>
-                {title}
-            </Text>
-            </TouchableHighlight>
-        );
-    }
-  
-    _renderPauseButton(onPress, active) {
-        var style = (active) ? styles.activeButtonText : styles.buttonText;
-        var title = this.state.paused ? "RESUME" : "PAUSE";
         return (
             <TouchableHighlight style={styles.button} onPress={onPress}>
             <Text style={style}>
@@ -88,7 +75,7 @@ export default class AaiAsr extends Component {
           return;
         }
   
-        this.setState({stoppedRecording: true, recording: false, paused: false});
+        this.setState({stoppedRecording: true, recording: false});
   
         try {
           const filePath = await AudioRecorder.stopRecording();
@@ -142,7 +129,7 @@ export default class AaiAsr extends Component {
             this.prepareRecordingPath(this.state.audioPath);
         }
   
-        this.setState({recording: true, paused: false});
+        this.setState({recording: true});
   
         try {
             const filePath = await AudioRecorder.startRecording();
