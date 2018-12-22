@@ -368,7 +368,7 @@ export default class AaiAsr extends Component {
                         <TouchableWithoutFeedback
                             style={styles.voice_btn}
                             onPressIn={()=>{this.pressVoice()}}
-                            onPress={()=>{this.pressVoice()}}
+                            onPressOut={()=>{this.pressVoice()}}
                         >
                             <View style={styles.voice_btn}></View>
                         </TouchableWithoutFeedback>

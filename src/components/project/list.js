@@ -1,5 +1,6 @@
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
+import LottieView from 'lottie-react-native';
 
 import React, {Component} from 'react';
 import {
@@ -55,7 +56,7 @@ export default class ListPage extends Component {
                             <Text style={styles.banner_text}>{data.summary}</Text>
                         </LinearGradient>
                     </View>
-                    <Animatable.View animation="fadeInUp" duration={1000} iterationDelay={300} iterationCount={1} direction="normal">
+                    <Animatable.View animation="fadeInUp" duration={800} iterationDelay={400} iterationCount={1} direction="normal">
                     <View style={styles.b_list}>
                         {
                             data.children.length ? (
@@ -75,8 +76,13 @@ export default class ListPage extends Component {
                                 })
                             ):(
                                 <View style={styles.null}>
-                                    <Image source={require("../../assets/image/developing.png")} style={styles.null_img} />
-                                    <Text style={styles.null_text}>努力开发中</Text>
+                                    <LottieView
+                                        style={styles.null_img}
+                                        source={require('../../assets/animotion/coding_ape.json')}
+                                        autoPlay={true}
+                                        loop={true}
+                                        speed={1}
+                                    />
                                 </View>
                             )
                         }
@@ -186,11 +192,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: screen.height - (160 + 44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
+        minHeight: screen.height - (180 + 44 + NAVBSR_HEIGHT + STATUS_BAR_HEIGHT),
     },
     null_img: {
-        width: 160,
-        height: 116
+        width: 180,
+        height: 180
     },
     null_text: {
         fontSize: 15,
