@@ -371,11 +371,13 @@ export default class AaiAsr extends Component {
                             <View style={styles.voice_btn}></View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <View style={[styles.voice_time,{marginBottom: 20}]}>
-                        {
-                            this.state.OperationFeedback ? <Text style={styles.voice_time_text}>松开进行识别</Text> :  <Text style={styles.voice_time_text}>按下开始录音</Text>
-                        }
-                    </View>
+                    {
+                        !this.state.requestStatus && <Animatable.View animation="fadeInUp" duration={400} iterationCount={1} direction="normal"><View style={[styles.voice_time,{marginBottom: 20}]}>
+                            {
+                                this.state.OperationFeedback ? <Text style={styles.voice_time_text}>松开进行识别</Text> :  <Text style={styles.voice_time_text}>按下开始录音</Text>
+                            }
+                        </View></Animatable.View>
+                    }
                 </View>
                 {/* {
                     this.state.requestStatus && <ToastLoading />
