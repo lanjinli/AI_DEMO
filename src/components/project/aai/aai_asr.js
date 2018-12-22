@@ -178,6 +178,7 @@ export default class AaiAsr extends Component {
 
     // 完成记录
     _finishRecording(didSucceed, filePath, fileSize) {
+        if(!didSucceed)return;
         this.setState({
             finished: didSucceed,
             audioFilePath: filePath,
@@ -276,6 +277,7 @@ export default class AaiAsr extends Component {
     }
     componentWillUnmount() {
         this.prompt.release();
+        this._isMounted = false;
     }
 
     // 取消请求
