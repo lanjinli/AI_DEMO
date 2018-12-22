@@ -22,6 +22,7 @@ import {
 import {
     Demensions,
     screen,
+    windowScreen,
     STATUS_BAR_HEIGHT,
     NAVBSR_HEIGHT,
     toastUtil,
@@ -46,6 +47,7 @@ export default class AaiAsr extends Component {
             OperationFeedback: false, //按下松开
             audioFilePath: null, //录音文件路径
             audioFileBase64: null, //录音文件编码
+            resultData: null, //识别结果
         };
     }
 
@@ -64,7 +66,11 @@ export default class AaiAsr extends Component {
     voicePlay(){
         if(this.state.requestStatus)return
         this.setState({
-            OperationFeedback: true
+            finished: false,
+            OperationFeedback: true,
+            audioFilePath: null,
+            audioFileBase64: null,
+            resultData: null,
         });
         this.voiceAnimation.play();
         Vibration.vibrate(50);
@@ -96,6 +102,7 @@ export default class AaiAsr extends Component {
 
     // 触发按钮
     pressVoice(){
+        if(this.state.requestStatus)return;
         this.state.recording ? this.voiceStop() : this.voicePlay();
     }
 
@@ -103,12 +110,12 @@ export default class AaiAsr extends Component {
     async _record() {
 
         if (this.state.recording) {
-            console.warn('已经在录音');
+            toastUtil('已经在录音');
             return;
         }
   
         if (!this.state.hasPermission) {
-            console.warn('不能录音，未经允许');
+            toastUtil('不能录音，未经允许');
             return;
         }
   
@@ -128,7 +135,7 @@ export default class AaiAsr extends Component {
     // 停止录音
     async _stop(type) {
         if (!this.state.recording) {
-          console.warn('不能停止，没有录音');
+          toastUtil('不能停止，没有录音');
           return;
         }
         this.setState({
@@ -157,7 +164,6 @@ export default class AaiAsr extends Component {
               console.log('failed to load the sound', error);
             }
           });
-  
           setTimeout(() => {
             sound.play((success) => {
               if (success) {
@@ -192,6 +198,7 @@ export default class AaiAsr extends Component {
 
     // 请求接口
     requestApi() {
+        this._isMounted = true;
         if(this.state.requestStatus)return
         if(!this.state.audioFilePath || !this.state.audioFileBase64){
             toastUtil('录音文件读取失败');
@@ -216,19 +223,20 @@ export default class AaiAsr extends Component {
         })
         .then(result=>{
             if(this.state.requestStatus){
-                alert(JSON.stringify(result));
+                if(!this._isMounted)return;
                 console.log(result);
                 if(typeof result == "object"){
                     this.setState({
-                        requestStatus: false
+                        requestStatus: false,
+                        resultData: result
                     });
                 }else{
                     toastUtil('识别失败，未知错误');
                 }
-                
             }
         })
         .catch(error=>{
+            if(!this._isMounted)return;
             console.log(error);
             this.setState({
                 requestStatus: false
@@ -266,10 +274,20 @@ export default class AaiAsr extends Component {
             };
         });
     }
-
     componentWillUnmount() {
         this.prompt.release();
     }
+
+    // 取消请求
+    cancelRequest = () => {
+        if(this.state.requestStatus){
+            this.setState({
+                requestStatus: false
+            });
+            return true;
+        }
+        return false;
+    };
 
     render() {
         const { data } = this.props.navigation.state.params;
@@ -287,8 +305,42 @@ export default class AaiAsr extends Component {
                         </TouchableOpacity>
                     }
                 />
-                <ScrollView>
-                </ScrollView>
+                <View style={{
+                    height: screen.height - NAVBSR_HEIGHT - STATUS_BAR_HEIGHT - 200 - (screen.height - windowScreen.height),
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <View style={styles.results}>
+                        {
+                            this.state.requestStatus ? <LottieView
+                                style={styles.requestLoad}
+                                source={require('../../../assets/animotion/material_wave_loading.json')}
+                                autoPlay={true}
+                                loop={true}
+                                speed={1.2}
+                            />:<Animatable.View animation="fadeInDown" duration={500} iterationCount={1} direction="normal"><Text style={styles.results_text}>
+                                {(this.state.resultData && this.state.resultData.ret == 0) && (this.state.resultData.data.text)}
+                            </Text></Animatable.View>
+                        }
+                    </View>
+                    {
+                        !(this.state.resultData && this.state.resultData.ret == 0) && <Animatable.View animation="fadeInDown" duration={500} iterationCount={1} direction="normal"><View style={styles.results}>
+                            <Text style={styles.results_err_text}>
+                                {this.state.resultData && this.state.resultData.msg}
+                                &nbsp;&nbsp;
+                                {this.state.resultData && 'code:'+this.state.resultData.ret}
+                            </Text>
+                            <Text style={styles.results_err_text}>
+                                {
+                                    this.state.resultData && (
+                                        this.state.resultData.ret > 0 ? ErrCode[this.state.resultData.ret]:'系统出错'
+                                    )
+                                }
+                            </Text>
+                        </View></Animatable.View>
+                    }
+                </View>
                 <View style={styles.voice}>
                     <View style={styles.voice_time}>
                         {
@@ -319,15 +371,15 @@ export default class AaiAsr extends Component {
                             <View style={styles.voice_btn}></View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <View style={[styles.voice_time,{marginBottom: 30}]}>
+                    <View style={[styles.voice_time,{marginBottom: 20}]}>
                         {
                             this.state.OperationFeedback ? <Text style={styles.voice_time_text}>松开进行识别</Text> :  <Text style={styles.voice_time_text}>按下开始录音</Text>
                         }
                     </View>
                 </View>
-                {
+                {/* {
                     this.state.requestStatus && <ToastLoading />
-                }
+                } */}
             </View>
         );
     }
@@ -349,7 +401,7 @@ const styles = StyleSheet.create({
         width: screen.width,
         height: 220,
         position: 'absolute',
-        bottom: -30,
+        bottom: -20,
         left: 0,
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -391,5 +443,44 @@ const styles = StyleSheet.create({
     voice_icon: {
         width: 220,
         height: 220,
-    }
+    },
+    results: {
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    TextView: {
+        backgroundColor: '#ebecec',
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        textAlign: 'center',
+    },
+    PreView: {
+        backgroundColor: '#fff',
+        paddingVertical: 10,
+    },
+    results_text: {
+        fontSize: 18,
+        paddingVertical: 2,
+        lineHeight: 30,
+        textAlign: 'center',
+        color: '#464646'
+    },
+    results_pre: {
+        fontSize: 14,
+        paddingVertical: 3,
+        lineHeight: 20,
+    },
+    results_err_text: {
+        fontSize: 14,
+        paddingHorizontal: 6,
+        lineHeight: 28,
+        textAlign: 'center',
+    },
+    requestLoad: {
+        width: 100,
+        height: 70
+    },
 });
