@@ -119,14 +119,38 @@ export const HomeData = [
                 img: require('../assets/image/icon_aai_01.png'),
                 title: '语音识别-AI Lab',
                 summary: '对音频进行流式识别，轻松实现边录音边识别',
-                page: 'AaiAsr'
+                page: 'AaiAsrs'
             },
             {
                 img: require('../assets/image/icon_aai_01.png'),
                 title: '语音识别-WeChat AI',
                 summary: '对音频进行流式识别，轻松实现边录音边识别',
-                page: 'AaiAsr'
+                page: 'AaiWxasrs'
             },
+            {
+                img: require('../assets/image/icon_aai_01.png'),
+                title: '长语音识别',
+                summary: '上传长音频，提供回调接口，异步获取识别结果',
+                page: 'AaiWxasrlong'
+            },
+            {
+                img: require('../assets/image/icon_aai_01.png'),
+                title: '关键词检索',
+                summary: '上传长音频，提供回调接口，异步获取识别结果',
+                page: 'AaiDetectkeyword'
+            },
+            {
+                img: require('../assets/image/icon_aai_01.png'),
+                title: '语音合成-AI Lab',
+                summary: '将文字转换为语音，返回文字的语音数据',
+                page: 'AaiTts'
+            },
+            {
+                img: require('../assets/image/icon_aai_01.png'),
+                title: '语音合成-优图',
+                summary: '将文字转换为语音，返回文字的语音数据',
+                page: 'AaiTta'
+            }
         ]
     },
     {

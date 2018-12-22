@@ -98,4 +98,8 @@ export const AaiApi = {
     aai_asr: 'https://api.ai.qq.com/fcgi-bin/aai/aai_asr',
     aai_asrs: 'https://api.ai.qq.com/fcgi-bin/aai/aai_asrs',
     aai_wxasrs: 'https://api.ai.qq.com/fcgi-bin/aai/aai_wxasrs',
+    aai_wxasrlong: 'https://api.ai.qq.com/fcgi-bin/aai/aai_wxasrlong',
+    aai_detectkeyword: 'https://api.ai.qq.com/fcgi-bin/aai/aai_detectkeyword',
+    aai_tts: 'https://api.ai.qq.com/fcgi-bin/aai/aai_tts',
+    aai_tta: 'https://api.ai.qq.com/fcgi-bin/aai/aai_tta'
 }
