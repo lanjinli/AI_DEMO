@@ -42,6 +42,7 @@ export default class AaiAsr extends Component {
             audioPath: AudioUtils.DocumentDirectoryPath + '/test.aac',  //路径下的文件名
             hasPermission: undefined,   //是否获取权限
             requestStatus: false, //请求状态
+            OperationFeedback: false, //按下松开
         };
     }
 
@@ -58,6 +59,7 @@ export default class AaiAsr extends Component {
 
     // 记录
     async _record() {
+
         if (this.state.recording) {
             console.warn('已经在录音');
             return;
@@ -150,6 +152,10 @@ export default class AaiAsr extends Component {
     
             AudioRecorder.onProgress = (data) => {
               this.setState({currentTime: Math.floor(data.currentTime)});
+              if(data.currentTime >= 5){
+                toastUtil('识别上限15秒');
+                this.voiceStop();
+              }
             };
     
             AudioRecorder.onFinished = (data) => {
@@ -167,7 +173,10 @@ export default class AaiAsr extends Component {
 
     // 开始录音
     voicePlay(){
-        // this.throttlingTime = Date.now();
+        if(this.state.requestStatus)return
+        this.setState({
+            OperationFeedback: true
+        });
         this.voiceAnimation.play();
         Vibration.vibrate(50);
         this._record();
@@ -175,11 +184,19 @@ export default class AaiAsr extends Component {
 
     // 结束录音
     voiceStop(){
-        // if (this.throttlingTime && this.throttlingTime + 1000 >= Date.now()) {
+        this.setState({
+            OperationFeedback: false
+        });
         if (this.state.currentTime < 1) {
             this.voiceAnimation.reset();
             setTimeout(()=>{
-                this._stop(false);
+                if(this.state.currentTime < 1){
+                    this._stop(false);
+                }else{
+                    this.voiceAnimation.reset();
+                    this.prompt.play();
+                    this._stop(true);
+                }
             },400);
         }else{
             this.voiceAnimation.reset();
@@ -214,13 +231,9 @@ export default class AaiAsr extends Component {
                 <View style={styles.voice}>
                     <View style={styles.voice_time}>
                         {
-                            this.state.currentTime > 0 ? (
-                                <Animatable.View animation="fadeInUp" duration={400} iterationCount={1} direction="normal">
-                                    <Text style={[styles.voice_time_text,{fontSize: 20,}]}>{this.state.currentTime}s</Text>
-                                </Animatable.View>
-                            ) : (
-                                this.state.recording ? <Text style={styles.voice_time_text}>松开进行识别</Text> :  <Text style={styles.voice_time_text}>按下开始录音</Text> 
-                            )
+                            this.state.currentTime > 0 && <Animatable.View animation="fadeInUp" duration={400} iterationCount={1} direction="normal">
+                                <Text style={[styles.voice_time_text,{fontSize: 20, color: '#000'}]}>{this.state.currentTime}s</Text>
+                            </Animatable.View>
                         }
                     </View>
                     <View style={styles.voice_wrap}>
@@ -244,6 +257,11 @@ export default class AaiAsr extends Component {
                         >
                             <View style={styles.voice_btn}></View>
                         </TouchableWithoutFeedback>
+                    </View>
+                    <View style={[styles.voice_time,{marginBottom: 30}]}>
+                        {
+                            this.state.OperationFeedback ? <Text style={styles.voice_time_text}>松开进行识别</Text> :  <Text style={styles.voice_time_text}>按下开始录音</Text>
+                        }
                     </View>
                 </View>
                 {
@@ -272,15 +290,19 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: -30,
         left: 0,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     voice_time: {
-        height: 50,
+        height: 48,
         justifyContent: 'center',
         alignItems: 'center',
     },
     voice_time_text: {
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 14,
+        fontWeight: '100',
         lineHeight: 38,
         color: '#b9b9b9',
     },

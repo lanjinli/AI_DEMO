@@ -93,3 +93,9 @@ export const OcrApi = {
     ocr_plateocr: 'https://api.ai.qq.com/fcgi-bin/ocr/ocr_plateocr',
     ocr_bcocr: 'https://api.ai.qq.com/fcgi-bin/ocr/ocr_bcocr'
 }
+
+export const AaiApi = {
+    aai_asr: 'https://api.ai.qq.com/fcgi-bin/aai/aai_asr',
+    aai_asrs: 'https://api.ai.qq.com/fcgi-bin/aai/aai_asrs',
+    aai_wxasrs: 'https://api.ai.qq.com/fcgi-bin/aai/aai_wxasrs',
+}
