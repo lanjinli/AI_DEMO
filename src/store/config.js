@@ -166,6 +166,12 @@ export const HomeData = [
         summary: 'React Native\n常用第三方组件',
         page: 'List',
         children: [
+            {
+                img: require('../assets/image/icon_app.png'),
+                title: '高德定位',
+                summary: 'react-native-amap-geolocation',
+                page: 'RnGeoLocation'
+            },
             // {
             //     img: require('../assets/image/icon_app.png'),
             //     title: '模态窗',

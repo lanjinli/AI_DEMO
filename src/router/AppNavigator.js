@@ -15,7 +15,9 @@ import OcrCreditcardocrPage from '../components/project/ocr/ocr_creditcardocr';
 import OcrPlateocrPage from '../components/project/ocr/ocr_plateocr';
 import OcrBcocrPage from '../components/project/ocr/ocr_bcocr';
 
-import AaiAsrPage from '../components/project/aai/aai_asr.js';
+import AaiAsrPage from '../components/project/aai/aai_asr';
+
+import RnGeoLocationPage from '../components/project/rn//rn_geolocation';
 
 import TakePicturePage from '../components/common/TakePicture';
 
@@ -98,6 +100,12 @@ const AppNavigator = createStackNavigator(
         },
         AaiAsr: {
             screen: AaiAsrPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        RnGeoLocation: {
+            screen: RnGeoLocationPage,
             navigationOptions: {
                 header: () => null
             }
