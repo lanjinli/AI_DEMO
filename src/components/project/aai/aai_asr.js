@@ -73,7 +73,7 @@ export default class AaiAsr extends Component {
             resultData: null,
         });
         this.voiceAnimation.play();
-        Vibration.vibrate(50);
+        // Vibration.vibrate(50);
         this._record();
     }
 
@@ -213,7 +213,7 @@ export default class AaiAsr extends Component {
             "time_stamp": Math.round(new Date().getTime()/1000).toString(),
             "nonce_str": Math.floor(Math.random()*100000).toString(),
             "sign": "",
-            "format": 2,
+            "format": 1,
             "speech": this.state.audioFileBase64,
             "rate": 16000,
         }
