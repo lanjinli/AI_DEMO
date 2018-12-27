@@ -1,6 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 import LottieView from 'lottie-react-native';
-import Swiper from 'react-native-swiper';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import React, {Component} from 'react';
 import {
@@ -59,9 +59,11 @@ export default class RnScrollableTab extends Component {
                         </TouchableOpacity>
                     }
                 />
-                <ScrollView>
-                    
-                </ScrollView>
+                <ScrollableTabView>
+                    <Text tabLabel='Tab 1'>Tab 1 内容</Text>
+                    <Text tabLabel='Tab 2'>Tab 2 内容</Text>
+                    <Text tabLabel='Tab 3'>Tab 3 内容</Text>
+                </ScrollableTabView>
             </View>
         );
     }
