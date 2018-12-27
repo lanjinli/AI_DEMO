@@ -28,7 +28,7 @@ import HttpService from '../../../service/httpService';
 import {SignUrl, AppId, ErrCode, AaiApi} from '../../../service/urlService';
 import ToastLoading from '../../common/ToastLoading';
 
-export default class AaiAsr extends Component {
+export default class RnAmap3d extends Component {
 
     constructor() {
         super();

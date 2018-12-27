@@ -19,6 +19,7 @@ import AaiAsrPage from '../components/project/aai/aai_asr';
 
 import RnGeoLocationPage from '../components/project/rn/rn_geolocation';
 import RnAmap3dPage from '../components/project/rn/rn_amap3d';
+import RnSwiperPage from '../components/project/rn/rn_swiper';
 
 import TakePicturePage from '../components/common/TakePicture';
 
@@ -113,6 +114,12 @@ const AppNavigator = createStackNavigator(
         },
         RnAmap3d: {
             screen: RnAmap3dPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        RnSwiper: {
+            screen: RnSwiperPage,
             navigationOptions: {
                 header: () => null
             }

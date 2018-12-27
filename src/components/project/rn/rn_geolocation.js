@@ -24,7 +24,7 @@ import {
 import NavigationBar from '../../navigation/NavigationBar';
 import ToastLoading from '../../common/ToastLoading';
 
-export default class AaiAsr extends Component {
+export default class RnGeolocation extends Component {
 
     constructor() {
         super();
