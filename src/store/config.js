@@ -172,6 +172,12 @@ export const HomeData = [
                 summary: 'react-native-amap-geolocation',
                 page: 'RnGeoLocation'
             },
+            {
+                img: require('../assets/image/icon_app.png'),
+                title: '高德地图',
+                summary: 'react-native-amap3d',
+                page: 'RnAmap3d'
+            },
             // {
             //     img: require('../assets/image/icon_app.png'),
             //     title: '模态窗',

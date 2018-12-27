@@ -3,6 +3,7 @@ package com.ai_demo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import cn.qiuxiang.react.amap3d.AMap3DPackage;
 import cn.qiuxiang.react.geolocation.AMapGeolocationPackage;
 import com.rnfs.RNFSPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
@@ -32,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AMap3DPackage(),
             new AMapGeolocationPackage(),
             new RNFSPackage(),
             new ReactNativeAudioPackage(),

@@ -17,7 +17,8 @@ import OcrBcocrPage from '../components/project/ocr/ocr_bcocr';
 
 import AaiAsrPage from '../components/project/aai/aai_asr';
 
-import RnGeoLocationPage from '../components/project/rn//rn_geolocation';
+import RnGeoLocationPage from '../components/project/rn/rn_geolocation';
+import RnAmap3dPage from '../components/project/rn/rn_amap3d';
 
 import TakePicturePage from '../components/common/TakePicture';
 
@@ -106,6 +107,12 @@ const AppNavigator = createStackNavigator(
         },
         RnGeoLocation: {
             screen: RnGeoLocationPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        RnAmap3d: {
+            screen: RnAmap3dPage,
             navigationOptions: {
                 header: () => null
             }
