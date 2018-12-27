@@ -11,10 +11,7 @@ import {
     Image,
     TouchableOpacity,
     TouchableHighlight,
-    TouchableWithoutFeedback,
     ScrollView,
-    BackHandler,
-    Button,
 } from 'react-native';
 import {
     Demensions,
@@ -25,8 +22,6 @@ import {
     toastUtil,
 } from '../../../constants/util';
 import NavigationBar from '../../navigation/NavigationBar';
-import HttpService from '../../../service/httpService';
-import {SignUrl, AppId, ErrCode, AaiApi} from '../../../service/urlService';
 import ToastLoading from '../../common/ToastLoading';
 
 export default class AaiAsr extends Component {
@@ -106,6 +101,17 @@ export default class AaiAsr extends Component {
                             <Text style={styles.btn_text}>结束定位</Text>
                         </TouchableOpacity>
                     </View>
+                    {
+                        !this.state.location && <View style={{flex: 1, height: 300, justifyContent: 'center', alignItems: 'center',}}>
+                            <LottieView
+                                style={{width: 120, height: 120}}
+                                source={require('../../../assets/animotion/location.json')}
+                                autoPlay={true}
+                                loop={true}
+                                speed={1.2}
+                            />
+                        </View>
+                    }
                     {
                         this.state.location && 
                         <View style={styles.results}>

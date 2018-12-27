@@ -1,6 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 import LottieView from 'lottie-react-native';
-import { Geolocation } from "react-native-amap-geolocation";
+import { MapView } from 'react-native-amap3d';
 
 import React, {Component} from 'react';
 import {
@@ -14,7 +14,6 @@ import {
     TouchableWithoutFeedback,
     ScrollView,
     BackHandler,
-    Button,
 } from 'react-native';
 import {
     Demensions,
@@ -39,36 +38,16 @@ export default class AaiAsr extends Component {
     }
 
     componentWillMount() {
-        Geolocation.init({
-            ios: "e98ff5f495169c41b3b8f592d9720fed",
-            android: "e98ff5f495169c41b3b8f592d9720fed"
-        })
+        // e98ff5f495169c41b3b8f592d9720fed
     }
 
     componentDidMount() {
-        Geolocation.setOptions({
-            interval: 10000,
-            distanceFilter: 10,
-            reGeocode: true
-        })
-        Geolocation.addLocationListener(location => {
-            console.log(location)
-            this.setState({
-                location: location
-            })
-        })
+    }
+
+    async componentDidMount() {
     }
 
     componentWillUnmount() {
-        Geolocation.stop()
-    }
-
-    _renderTextView(){
-        let list = [];
-        for(var key in this.state.location){
-            list.push(<Text style={styles.results_text} key={key}>{key}：{this.state.location[key]}</Text>);
-        }
-        return list
     }
 
     render() {
@@ -87,46 +66,47 @@ export default class AaiAsr extends Component {
                         </TouchableOpacity>
                     }
                 />
-                <ScrollView>
-                    <View style={styles.button}>
-                        <TouchableOpacity
-                            style={styles.btn_wrap}
-                            activeOpacity={0.9}
-                            onPress={() => Geolocation.start()}
-                        >
-                            <Text style={styles.btn_text}>开始定位</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.button}>
-                        <TouchableOpacity
-                            style={styles.btn_wrap}
-                            activeOpacity={0.9}
-                            onPress={() => Geolocation.stop()}
-                        >
-                            <Text style={styles.btn_text}>结束定位</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {
-                        this.state.location && 
-                        <View style={styles.results}>
-                            <View style={styles.TextView}>
-                                {this._renderTextView()}
-                            </View>
-                            <View style={styles.PreView}>
-                                <Text style={styles.results_pre}>{this.state.location && formatJson(this.state.location)}</Text>
-                            </View>
-                        </View>
-                    }
-                </ScrollView>
+                <MapView
+                    ref={ref => this.mapView = ref}
+                    style={{
+                        width: screen.width,
+                        height: screen.height - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT)
+                    }}
+                    mapType={'standard'} //地图类型
+                    locationStyle={{backgroundColor:'#f00'}} //定位图标样式
+                    locationInterval={5000} //定位间隔(ms)
+                    showsIndoorMap={true} //是否显示室内地图
+                    showsBuildings={true} //是否显示3D建筑
+                    showsCompass={false} //是否显示指南针
+                    showsZoomControls={false} //是否显示放大缩小按钮
+                    showsLocationButton={false} //是否显示定位按钮
+                    locationEnabled={true} //是否启用定位
+                    zoomLevel={16} //当前缩放级别
+                    onLocation={({ nativeEvent }) => {
+                        this.setState({
+                            location: {
+                                latitude: nativeEvent.latitude,
+                                longitude: nativeEvent.longitude
+                            }
+                        });
+                        this.mapView.animateTo({
+                            coordinate: {
+                              latitude: nativeEvent.latitude,
+                              longitude: nativeEvent.longitude,
+                            },
+                        })
+                    }}
+                >
+                    <MapView.Circle
+                        strokeWidth={5}
+                        strokeColor="red"
+                        fillColor="red"
+                        radius={10000}
+                        coordinate={this.coordinate}
+                    />
+                </MapView>
             </View>
         );
-    }
-
-    startLocation = () => {
-        Geolocation.start();
-    };
-    stopLocation = () => {
-        Geolocation.stop();
     }
 
 }
@@ -143,50 +123,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    results: {
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-    },
-    TextView: {
-        backgroundColor: '#ebecec',
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-    },
-    PreView: {
-        backgroundColor: '#fff',
-        paddingVertical: 10,
-    },
-    results_text: {
-        fontSize: 14,
-        paddingVertical: 2,
-        lineHeight: 24,
-    },
-    results_pre: {
-        fontSize: 14,
-        paddingVertical: 3,
-        lineHeight: 20,
-    },
-    results_err_text: {
-        fontSize: 14,
-        paddingHorizontal: 6,
-        lineHeight: 28,
-        textAlign: 'center',
-    },
-    button: {
-        marginHorizontal: 10,
-        marginTop: 10,
-        marginBottom: 10,
-    },
-    btn_wrap: {
-        height: 44,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 3,
-        backgroundColor: '#1657da'
-    },
-    btn_text: {
-        fontSize: 18,
-        color: '#fff'
-    }
 });
