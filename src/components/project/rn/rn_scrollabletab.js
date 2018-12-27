@@ -28,7 +28,7 @@ import HttpService from '../../../service/httpService';
 import {SignUrl, AppId, ErrCode, AaiApi} from '../../../service/urlService';
 import ToastLoading from '../../common/ToastLoading';
 
-export default class RnSwiper extends Component {
+export default class RnScrollableTab extends Component {
 
     constructor() {
         super();
@@ -60,17 +60,7 @@ export default class RnSwiper extends Component {
                     }
                 />
                 <ScrollView>
-                    <Swiper style={styles.wrapper}>
-                        <TouchableHighlight style={{width: screen.width,height:200}}>
-                            <Image style={{width: screen.width,height:200}} resizeMode="stretch" source={{uri: 'https://images.unsplash.com/photo-1545600735-35c52bc2a640?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60'}}/>
-                        </TouchableHighlight>
-                        <TouchableHighlight style={{width: screen.width,height:200}}>
-                            <Image style={{width: screen.width,height:200}} resizeMode="stretch" source={{uri: 'https://images.unsplash.com/photo-1545702792-e6952fa78df3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60'}}/>
-                        </TouchableHighlight>
-                        <TouchableHighlight style={{width: screen.width,height:200}}>
-                            <Image style={{width: screen.width,height:200}} resizeMode="stretch" source={{uri: 'https://images.unsplash.com/photo-1540202404-b37a2124ed0d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60'}}/>
-                        </TouchableHighlight>
-                    </Swiper>
+                    
                 </ScrollView>
             </View>
         );
@@ -92,6 +82,6 @@ const styles = StyleSheet.create({
     },
     wrapper: {
         flex: 1,
-        height: 200
+        height: 157
     }
 });

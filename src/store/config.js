@@ -184,6 +184,12 @@ export const HomeData = [
                 summary: 'react-native-swiper',
                 page: 'RnSwiper'
             },
+            {
+                img: require('../assets/image/icon_app.png'),
+                title: 'ScrollableTab',
+                summary: 'react-native-scrollable-tab-view',
+                page: 'RnScrollableTab'
+            },
             // {
             //     img: require('../assets/image/icon_app.png'),
             //     title: '模态窗',

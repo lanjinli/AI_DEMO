@@ -33,7 +33,7 @@ export default class RnAmap3d extends Component {
     constructor() {
         super();
         this.state = {
-            location: null
+            location: false
         };
     }
 
@@ -81,18 +81,19 @@ export default class RnAmap3d extends Component {
                     showsZoomControls={false} //是否显示放大缩小按钮
                     showsLocationButton={false} //是否显示定位按钮
                     locationEnabled={true} //是否启用定位
-                    zoomLevel={16} //当前缩放级别
+                    zoomLevel={12} //当前缩放级别
                     onLocation={({ nativeEvent }) => {
                         this.setState({
-                            location: {
-                                latitude: nativeEvent.latitude,
-                                longitude: nativeEvent.longitude
-                            }
+                            location: true
                         });
+                        if(this.state.location)return
                         this.mapView.animateTo({
                             coordinate: {
-                              latitude: nativeEvent.latitude,
-                              longitude: nativeEvent.longitude,
+                                tilt: 0,
+                                rotation: 0,
+                                zoomLevel: 16,
+                                latitude: nativeEvent.latitude,
+                                longitude: nativeEvent.longitude,
                             },
                         })
                     }}
