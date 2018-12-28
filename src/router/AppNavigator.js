@@ -21,6 +21,8 @@ import RnGeoLocationPage from '../components/project/rn/rn_geolocation';
 import RnAmap3dPage from '../components/project/rn/rn_amap3d';
 import RnSwiperPage from '../components/project/rn/rn_swiper';
 import RnScrollableTabPage from '../components/project/rn/rn_scrollabletab';
+import RnWebViewPage from '../components/project/rn/rn_webview';
+import RnWebViewMsgPage from '../components/project/rn/rn_webviewmsg';
 
 import TakePicturePage from '../components/common/TakePicture';
 
@@ -127,6 +129,18 @@ const AppNavigator = createStackNavigator(
         },
         RnScrollableTab: {
             screen: RnScrollableTabPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        RnWebView: {
+            screen: RnWebViewPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        RnWebViewMsg: {
+            screen: RnWebViewMsgPage,
             navigationOptions: {
                 header: () => null
             }

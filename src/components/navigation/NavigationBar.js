@@ -78,6 +78,8 @@ export default class NavigationBar extends Component {
 const styles = StyleSheet.create({
     container: {
         height: NAVBSR_HEIGHT + STATUS_BAR_HEIGHT,
+        position: 'relative',
+        zIndex: 1000
     },
     statusBar: {
         height: STATUS_BAR_HEIGHT,

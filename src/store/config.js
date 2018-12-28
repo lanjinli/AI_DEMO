@@ -190,6 +190,18 @@ export const HomeData = [
                 summary: 'react-native-scrollable-tab-view',
                 page: 'RnScrollableTab'
             },
+            {
+                img: require('../assets/image/icon_app.png'),
+                title: 'WebView',
+                summary: 'WebView',
+                page: 'RnWebView'
+            },
+            {
+                img: require('../assets/image/icon_app.png'),
+                title: 'RN & H5',
+                summary: 'RN & H5',
+                page: 'RnWebViewMsg'
+            },
             // {
             //     img: require('../assets/image/icon_app.png'),
             //     title: '模态窗',
