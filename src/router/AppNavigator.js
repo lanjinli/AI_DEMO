@@ -23,8 +23,10 @@ import RnSwiperPage from '../components/project/rn/rn_swiper';
 import RnScrollableTabPage from '../components/project/rn/rn_scrollabletab';
 import RnWebViewPage from '../components/project/rn/rn_webview';
 import RnWebViewMsgPage from '../components/project/rn/rn_webviewmsg';
+import RnImageViewerPage from '../components/project/rn/rn_imageviewer';
 
 import TakePicturePage from '../components/common/TakePicture';
+import ImageViewerPage from '../components/common/ImageViewer';
 
 const AppNavigator = createStackNavigator(
     {
@@ -51,6 +53,12 @@ const AppNavigator = createStackNavigator(
         },
         TakePicture: {
             screen: TakePicturePage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        ImageViewer: {
+            screen: ImageViewerPage,
             navigationOptions: {
                 header: () => null
             }
@@ -141,6 +149,12 @@ const AppNavigator = createStackNavigator(
         },
         RnWebViewMsg: {
             screen: RnWebViewMsgPage,
+            navigationOptions: {
+                header: () => null
+            }
+        },
+        RnImageViewer: {
+            screen: RnImageViewerPage,
             navigationOptions: {
                 header: () => null
             }

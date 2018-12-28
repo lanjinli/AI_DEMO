@@ -28,7 +28,7 @@ import HttpService from '../../../service/httpService';
 import {SignUrl, AppId, ErrCode, AaiApi} from '../../../service/urlService';
 import ToastLoading from '../../common/ToastLoading';
 
-export default class RnWebView extends Component {
+export default class RnWebViewMsg extends Component {
 
     constructor() {
         super();

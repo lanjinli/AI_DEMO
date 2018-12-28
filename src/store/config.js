@@ -202,6 +202,12 @@ export const HomeData = [
                 summary: 'RN & H5',
                 page: 'RnWebViewMsg'
             },
+            {
+                img: require('../assets/image/icon_app.png'),
+                title: '图片预览',
+                summary: 'react-native-image-viewer',
+                page: 'RnImageViewer'
+            },
             // {
             //     img: require('../assets/image/icon_app.png'),
             //     title: '模态窗',
