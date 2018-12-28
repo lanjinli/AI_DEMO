@@ -33,7 +33,8 @@ export default class RnAmap3d extends Component {
     constructor() {
         super();
         this.state = {
-            location: false
+            location: false,
+            coordinate: null
         };
     }
 
@@ -73,7 +74,6 @@ export default class RnAmap3d extends Component {
                         height: screen.height - (STATUS_BAR_HEIGHT + NAVBSR_HEIGHT)
                     }}
                     mapType={'standard'} //地图类型
-                    locationStyle={{backgroundColor:'#f00'}} //定位图标样式
                     locationInterval={5000} //定位间隔(ms)
                     showsIndoorMap={true} //是否显示室内地图
                     showsBuildings={true} //是否显示3D建筑
@@ -81,30 +81,32 @@ export default class RnAmap3d extends Component {
                     showsZoomControls={false} //是否显示放大缩小按钮
                     showsLocationButton={false} //是否显示定位按钮
                     locationEnabled={true} //是否启用定位
-                    zoomLevel={12} //当前缩放级别
+                    zoomLevel={3} //当前缩放级别
                     onLocation={({ nativeEvent }) => {
                         this.setState({
-                            location: true
+                            location: true,
+                            coordinate: {
+                                latitude: nativeEvent.latitude,
+                                longitude: nativeEvent.longitude
+                            }
                         });
                         if(this.state.location)return
                         this.mapView.animateTo({
+                            zoomLevel: 16,
                             coordinate: {
-                                tilt: 0,
-                                rotation: 0,
-                                zoomLevel: 16,
                                 latitude: nativeEvent.latitude,
                                 longitude: nativeEvent.longitude,
                             },
                         })
                     }}
                 >
-                    <MapView.Circle
-                        strokeWidth={5}
-                        strokeColor="red"
-                        fillColor="red"
-                        radius={10000}
-                        coordinate={this.coordinate}
-                    />
+                    {this.state.coordinate && <MapView.Circle
+                        strokeWidth={1}
+                        strokeColor="rgba(0,128,255,.8)"
+                        fillColor="rgba(0,128,255,.1)"
+                        radius={500}
+                        coordinate={this.state.coordinate}
+                    />}
                 </MapView>
             </View>
         );
