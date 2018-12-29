@@ -22,10 +22,6 @@ export default class Welcome extends Component {
     getHomePage() {
         this.props.navigation.replace('Home');
     }
-    static navigationOptions = {
-        // 隐藏头部
-        header: () => null
-    };
 
     constructor(props) {
         super(props);

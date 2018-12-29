@@ -26,7 +26,7 @@
     "react-native-scrollable-tab-view": "^0.10.0",
     "react-native-sound": "^0.10.9",
     "react-native-swiper": "^1.5.14",
-    "react-navigation": "^3.0.8"
+    "react-navigation": "^3.0.9"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

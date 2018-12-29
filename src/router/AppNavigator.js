@@ -34,135 +34,72 @@ const AppNavigator = createStackNavigator(
             screen: WelcomePage
         },
         Home: {
-            screen: HomeDrawerNavigator,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: HomeDrawerNavigator
         },
         Info: {
-            screen: InfoPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: InfoPage
         },
         List: {
-            screen: ListPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: ListPage
         },
         TakePicture: {
-            screen: TakePicturePage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: TakePicturePage
         },
         ImageViewer: {
-            screen: ImageViewerPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: ImageViewerPage
         },
         OcrHandwritingocr: {
-            screen: OcrHandwritingocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrHandwritingocrPage
         },
         OcrGeneralocr: {
-            screen: OcrGeneralocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrGeneralocrPage
         },
         OcrIdcardocr: {
-            screen: OcrIdcardocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrIdcardocrPage
         },
         OcrDriverlicenseocr: {
-            screen: OcrDriverlicenseocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrDriverlicenseocrPage
         },
         OcrBizlicenseocr: {
-            screen: OcrBizlicenseocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrBizlicenseocrPage
         },
         OcrCreditcardocr: {
-            screen: OcrCreditcardocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrCreditcardocrPage
         },
         OcrPlateocr: {
-            screen: OcrPlateocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrPlateocrPage
         },
         OcrBcocr: {
-            screen: OcrBcocrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: OcrBcocrPage
         },
         AaiAsr: {
-            screen: AaiAsrPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: AaiAsrPage
         },
         RnGeoLocation: {
-            screen: RnGeoLocationPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: RnGeoLocationPage
         },
         RnAmap3d: {
-            screen: RnAmap3dPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: RnAmap3dPage
         },
         RnSwiper: {
-            screen: RnSwiperPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: RnSwiperPage
         },
         RnScrollableTab: {
-            screen: RnScrollableTabPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: RnScrollableTabPage
         },
         RnWebView: {
-            screen: RnWebViewPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: RnWebViewPage
         },
         RnWebViewMsg: {
-            screen: RnWebViewMsgPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: RnWebViewMsgPage
         },
         RnImageViewer: {
-            screen: RnImageViewerPage,
-            navigationOptions: {
-                header: () => null
-            }
+            screen: RnImageViewerPage
         }
     },
     {
         initialRouteName: 'Welcome',
-        navigationOptions: {
+        defaultNavigationOptions: {
             header: () => null
         },
         transitionConfig: () => ({
